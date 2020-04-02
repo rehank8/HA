@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:behavior="clr-namespace:HA.Behaviors"
+             mc:Ignorable="d"
+             x:Class="HA.Views.VendorListCount">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Margin="10" FontSize="Large">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="{Binding CategoryName}"></Span>
+                        <Span Text="{Binding VendorsCount}"></Span>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <ListView ItemsSource="{Binding Vendors}" Margin="10" HasUnevenRows="True">
+                <ListView.Behaviors>
+                    <behavior:EventToCommandBehavior></behavior:EventToCommandBehavior>
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <!--<Frame Padding="5,15,5,15" CornerRadius="6" Margin="5" HeightRequest="200" BorderColor="LightGray">-->
+                                <Grid RowSpacing="5" ColumnSpacing="5" Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                        <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{Binding PhotoUrl}" HeightRequest="40" VerticalOptions="CenterAndExpand"></Image>
+                                    <StackLayout Grid.Column="1" HorizontalOptions="Start">
+                                        <Label Text="{Binding ListingName}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"></Label>
+                                    <Label HorizontalTextAlignment="Start" VerticalTextAlignment="Center">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Insurance: " FontAttributes="Bold"></Span>
+                                                <Span Text="{Binding Insurance}"></Span>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </StackLayout>
+                                <Button Text="BookNow" Grid.Column="2" BackgroundColor="#03a9f4" FontSize="Small" VerticalOptions="CenterAndExpand" HorizontalOptions="End"></Button>
+                                </Grid>
+                            <!--</Frame>-->
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

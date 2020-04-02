@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="HA.Views.LoginPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Image Source="ATSlogin.png" Aspect="AspectFit" HeightRequest="100" WidthRequest="250"></Image>
+            <StackLayout VerticalOptions="CenterAndExpand" Padding="0,50,0,0">
+                <!--<Image Source="ATSlogo.png" Margin="0,0,0,40" HeightRequest="100" WidthRequest="200"></Image>-->
+                <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand" >
+                    <StackLayout Orientation="Horizontal">
+                        <Image Source="mail.png" HeightRequest="30" WidthRequest="30"></Image>
+                        <Entry   Text="{Binding EmailId}" Placeholder="Email id / Phone Number" PlaceholderColor="#D2CEE5" FontAttributes="Bold" FontFamily="Roboto"  TextColor="Black" HorizontalOptions="FillAndExpand"  ClassId="Email">
+                           
+                        </Entry>
+                    </StackLayout>
+                    <Label x:Name="lblEmail" TextColor="#d3251f" HorizontalTextAlignment="Start"  FontSize="13"></Label>
+                </StackLayout>
+                <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
+                    <StackLayout Orientation="Horizontal">
+                        <Image Source="password.png" HeightRequest="30" WidthRequest="30"></Image>
+                        <Entry  Text="{Binding Password}" TextColor="Black" Placeholder="Password" FontAttributes="Bold" FontFamily="Roboto" PlaceholderColor="#D2CEE5" IsPassword="True"  HorizontalOptions="FillAndExpand" ClassId="Password">
+                           
+                        </Entry>
+                    </StackLayout>
+                    <Label x:Name="lblPassword" TextColor="#d3251f" HorizontalTextAlignment="Start"  FontSize="13"></Label>
+                </StackLayout>
+                <Button x:Name="Btnlgn" Text="Login" TextColor="White" BackgroundColor="#9B88F1" Margin="0,15,0,0"
+                    Command="{Binding LoginCommand}" CornerRadius="30"></Button>
+                <Label  Text="{Binding ErrorMessage}" TextColor="#d3251f" HorizontalTextAlignment="Center"  WidthRequest="280"></Label>
+
+                <Label x:Name="lblForgotPassword" Text="Forgot Password ?" TextColor="#9B88F1" FontSize="14" FontFamily="Roboto" FontAttributes="Bold" HorizontalTextAlignment="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

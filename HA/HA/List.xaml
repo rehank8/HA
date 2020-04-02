@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="HA.List">
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView x:Name="Listview" SeparatorColor="Blue" HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <!--<TextCell Text="{Binding Name}" Detail="{Binding Status}"></TextCell> forbinding data to to text cell-->
+                        <!--<ImageCell Text="{Binding Name}" Detail="{Binding Status}" ImageSource="{Binding ImageURl}"/>to display data in image cell-->
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" Padding="5">
+                                <Image Source="{Binding ImageURl}"/>
+                                <StackLayout HorizontalOptions="StartAndExpand">
+                                    <Label Text="{Binding Name}" FontSize="Medium"/>
+                                    <Label Text="{Binding Status}" TextColor="Gray"/>
+
+                                </StackLayout>
+                                <Button Text="BookNow"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+        </StackLayout>
+      
+    </ContentPage.Content>
+</ContentPage>
+    
+    
+    
+    
+    
+   
