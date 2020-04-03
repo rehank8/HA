@@ -6,24 +6,25 @@
              mc:Ignorable="d"
              x:Class="HA.Views.VendorListCount">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Margin="10" FontSize="Large">
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="{Binding CategoryName}"></Span>
-                        <Span Text="{Binding VendorsCount}"></Span>
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <ListView ItemsSource="{Binding Vendors}" Margin="10" HasUnevenRows="True">
-                <ListView.Behaviors>
-                    <behavior:EventToCommandBehavior></behavior:EventToCommandBehavior>
-                </ListView.Behaviors>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <!--<Frame Padding="5,15,5,15" CornerRadius="6" Margin="5" HeightRequest="200" BorderColor="LightGray">-->
-                                <Grid RowSpacing="5" ColumnSpacing="5" Margin="5">
+        <AbsoluteLayout>
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+                <Label Margin="10" FontSize="Large">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding CategoryName}"></Span>
+                            <Span Text="{Binding VendorsCount}"></Span>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <ListView x:Name="lst" ItemsSource="{Binding Vendors}" Margin="10" HasUnevenRows="True" SelectedItem="{Binding Vendor}">
+                    <ListView.Behaviors>
+                        <behavior:EventToCommandBehavior EventName="ItemSelected" Command="{Binding BookNowCommand}" CommandParameter="{Binding Vendor}"></behavior:EventToCommandBehavior>
+                    </ListView.Behaviors>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <!--<Frame Padding="5,15,5,15" CornerRadius="6" Margin="5" HeightRequest="200" BorderColor="LightGray">-->
+                                <Grid x:Name="gd" RowSpacing="5" ColumnSpacing="5" Margin="5">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                         <ColumnDefinition Width="2*"></ColumnDefinition>
@@ -32,22 +33,73 @@
                                     <Image Source="{Binding PhotoUrl}" HeightRequest="40" VerticalOptions="CenterAndExpand"></Image>
                                     <StackLayout Grid.Column="1" HorizontalOptions="Start">
                                         <Label Text="{Binding ListingName}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"></Label>
-                                    <Label HorizontalTextAlignment="Start" VerticalTextAlignment="Center">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="Insurance: " FontAttributes="Bold"></Span>
-                                                <Span Text="{Binding Insurance}"></Span>
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-                                </StackLayout>
-                                <Button Text="BookNow" Grid.Column="2" BackgroundColor="#03a9f4" FontSize="Small" VerticalOptions="CenterAndExpand" HorizontalOptions="End"></Button>
+                                        <Label HorizontalTextAlignment="Start" VerticalTextAlignment="Center">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Insurance: " FontAttributes="Bold"></Span>
+                                                    <Span Text="{Binding Insurance}"></Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </StackLayout>
+                                    <Button Text="BookNow" Grid.Column="2" BackgroundColor="#03a9f4" BindingContext="{Binding Source={x:Reference lst},Path=BindingContext}" Command="{Binding BookNowCommand}" CommandParameter="{Binding Source={x:Reference gd},Path=BindingContext}" FontSize="Small" VerticalOptions="CenterAndExpand" HorizontalOptions="End"></Button>
                                 </Grid>
-                            <!--</Frame>-->
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </StackLayout>
+                                <!--</Frame>-->
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+            <ContentView x:Name="popupForm" IsVisible="{Binding IsSubmitFormVisible}" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent" AbsoluteLayout.LayoutBounds="0, 0, 1, .9" AbsoluteLayout.LayoutFlags="All">
+                <Frame Padding="0" Margin="20" BorderColor="Gray" HasShadow="False" CornerRadius="10" WidthRequest="400" BackgroundColor="#f7f7f7" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                    <StackLayout VerticalOptions="CenterAndExpand">
+                        <StackLayout BackgroundColor="Gray" Padding="0" Margin="0" Orientation="Horizontal">
+                            <Label Text="Book Now" VerticalTextAlignment="Center"  TextColor="White"  FontSize="Large" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" Margin="10" ></Label>
+                            <Image HorizontalOptions="End" HeightRequest="45" VerticalOptions="Start" Margin="0,0,2,0" Source="https://lh3.googleusercontent.com/proxy/6ohBk6b6ttNfAb7aBTcT4y9yI8E4fkDPQxxnmtFWEoAXOffurTfrbv96We7gf2uVDyBY5DqHnzF1Wr0sNZAfG5QIVlNB72U1GUBbsnwqX0_zETorH1Oatf6RIhhKTwEKvEI">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ClosePopUpCommand}"></TapGestureRecognizer>
+                                </Image.GestureRecognizers>
+                            </Image>
+                        </StackLayout>
+                        <StackLayout Spacing="10" Padding="15,5,15,15">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Entry Text="{Binding Firstname}" Placeholder="Firstname" HorizontalOptions="FillAndExpand"></Entry>
+                                <Entry Text="{Binding Lastname}" Grid.Column="1" Placeholder="Lastname" HorizontalOptions="FillAndExpand"></Entry>
+                            </Grid>
+                            <!--<Entry Text="" Placeholder="Email" HorizontalOptions="FillAndExpand"></Entry>
+                            <Entry Text="" Placeholder="Phone" HorizontalOptions="FillAndExpand"></Entry>-->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Entry Text="{Binding Email}" Placeholder="Email" HorizontalOptions="FillAndExpand"></Entry>
+                                <Entry Text="{Binding Phone}" Grid.Column="1" Placeholder="Phone" HorizontalOptions="FillAndExpand"></Entry>
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <DatePicker Date="{Binding SelectedDate}" MinimumDate="{Binding MinDate}" HorizontalOptions="FillAndExpand"></DatePicker>
+                                <TimePicker Time="{Binding SelectedTime}" Grid.Column="1" HorizontalOptions="FillAndExpand"></TimePicker>
+                            </Grid>
+                            <!--<DatePicker HorizontalOptions="FillAndExpand"></DatePicker>
+                            <TimePicker HorizontalOptions="FillAndExpand"></TimePicker>-->
+                            <Frame BorderColor="LightGray" Padding="10,0,10,0" Margin="0">
+                                <Editor Text="{Binding Reason}" HeightRequest="100" HorizontalOptions="FillAndExpand" Placeholder="Visiting reason"></Editor>
+                            </Frame>
+                            <Entry Text="{Binding ReferralPhone}" HorizontalOptions="FillAndExpand" Placeholder="Referral phone# if you have one"></Entry>
+                            <StackLayout Orientation="Horizontal" Spacing="10">
+                                <Button Text="BookNow" BackgroundColor="#03a9f4" CornerRadius="6" Command="{Binding BookAppointmentCommand}"></Button>
+                                <Button Text="Clear" CornerRadius="6"></Button>
+                            </StackLayout>
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+            </ContentView>
+
+        </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

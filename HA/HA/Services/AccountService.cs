@@ -162,5 +162,34 @@ namespace HA.Services
             }
             return null;
         }
+
+        public bool BookAppointment(UserQueryDTO model)
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(model);
+                HttpContent content = new StringContent(json);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                HttpClient client = new HttpClient();
+                //client.DefaultRequestHeaders.Add("Authorization", "Bearer " + Setters.AuthenticationModel.Token);
+                var response = client.PostAsync((booking), content).Result;
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    bool user = JsonConvert.DeserializeObject<bool>(result);
+                    return user;
+                }
+                else if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    throw new ApplicationException("Error..");
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
