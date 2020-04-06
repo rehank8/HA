@@ -23,11 +23,11 @@
                                 </Label.GestureRecognizers>
                             </Label>
 
-                            <Label Text="LIST" FontSize="Default" TextColor="White" Margin="0,0,10,0">
+                            <!--<Label Text="LIST" FontSize="Default" TextColor="White" Margin="0,0,10,0">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding GoToListCommand}"></TapGestureRecognizer>
                                 </Label.GestureRecognizers>
-                            </Label>
+                            </Label>-->
                         </StackLayout>
                     </StackLayout>
                 </Frame>
@@ -41,7 +41,7 @@
                         </SearchBar>
                         <Button Text="Search" CornerRadius="6" Margin="0,0,0,5" Command="{Binding SearchVendorCommand}"></Button>
                     </StackLayout>
-                    <CollectionView x:Name="lstNew" Margin="10" SelectionMode="Single" ItemsSource="{Binding Vendors}" IsVisible="{Binding Vendors,Converter={StaticResource IsEmptyListConverter}}">
+                    <CollectionView x:Name="lstNew" SelectionMode="Single" Margin="10" ItemsSource="{Binding Vendors}" IsVisible="{Binding Vendors,Converter={StaticResource IsEmptyListConverter}}">
                         <CollectionView.Behaviors>
                             <behavior:EventToCommandBehavior EventName="SelectionChanged" Command="{Binding ListSelectedCommand}" CommandParameter="{Binding CategoryName}"></behavior:EventToCommandBehavior>
                         </CollectionView.Behaviors>
@@ -51,18 +51,21 @@
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Frame Padding="5,15,5,15" CornerRadius="6" Margin="5" BorderColor="LightGray">
+                                <Frame x:Name="frm" Padding="5" CornerRadius="6" Margin="5" BorderColor="LightGray">
                                     <StackLayout>
                                         <Image Source="{Binding PhotoUrl}" HeightRequest="60" VerticalOptions="CenterAndExpand">
                                         </Image>
                                         <Label Text="{Binding ListingName}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"></Label>
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer  BindingContext="{Binding Source={x:Reference lstNew},Path=BindingContext}" Command="{Binding ListSelectedCommand}" CommandParameter="{Binding Source={x:Reference frm},Path=BindingContext}"></TapGestureRecognizer>
+                                        </StackLayout.GestureRecognizers>
                                     </StackLayout>
                                 </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
                 </StackLayout>
-             
+
             </StackLayout>
             <ContentView x:Name="popupReg" IsVisible="{Binding IsRegisterVisible}" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent" AbsoluteLayout.LayoutBounds="0, 0, 1, .9" AbsoluteLayout.LayoutFlags="All">
                 <Frame Padding="10" Margin="20" CornerRadius="10" WidthRequest="400" BackgroundColor="#f7f7f7" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">

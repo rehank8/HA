@@ -1,4 +1,5 @@
-﻿using HA.Model;
+﻿using Android.Webkit;
+using HA.Model;
 using HA.Services;
 using HA.Views;
 using MvvmHelpers;
@@ -261,18 +262,38 @@ namespace HA.ViewModels
             {
             }
         }
+
+        private async void getcurrentlocation()
+        {
+            //    //var geoInfo = await Plugin.Geolocator.CrossGeolocator.Current.GetPositionAsync(new TimeSpan(0, 0, 10), null, true);
+
+            //    var request = new GeolocationRequest(GeolocationAccuracy.Best);
+            //    var request = new GeolocationRequest(GeolocationAccuracy.Best);
+            //    var locations = await Geolocation.GetLocationAsync(request);
+            //    if (geoInfo != null)
+            //    {
+            //        // get the lat lng
+            //        var Location = new Point
+            //        {
+            //          X=geoInfo.
+            //        }
+            //        // get the location accuracy
+            //            var locationAccuracy = (int)geoInfo.Accuracy;
+            //    }
+        }
         async void List_clicked(object obj)
         {
-            var e = obj as SelectionChangedEventArgs;
-            var categoryName = e.CurrentSelection.FirstOrDefault() as UserIndex;
-            await Application.Current.MainPage.Navigation.PushAsync(new VendorListCount(categoryName.CategoryName));
+            var e = obj as UserIndex;
+           // UserIndex categoryName = null;
+           // categoryName = e.CurrentSelection.FirstOrDefault() as UserIndex;
+            await Application.Current.MainPage.Navigation.PushAsync(new VendorListCount(e.CategoryName, CurrentLocation));
         }
 
-        private async void Search_clicked()
+        private void Search_clicked()
         {
             GetVendorsByLocation();
         }
-        private async void Search1_clicked()
+        private void Search1_clicked()
         {
             if (string.IsNullOrEmpty(CurrentLocation))
                 GetVendorsByLocation();

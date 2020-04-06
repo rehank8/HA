@@ -13,10 +13,10 @@ namespace HA.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class VendorListCount : ContentPage
     {
-        public VendorListCount(string name)
+        public VendorListCount(string name,string location)
         {
             InitializeComponent();
-            BindingContext = new VendorlistViewModel(name);
+            BindingContext = new VendorlistViewModel(name,location);
         }
     }
 }

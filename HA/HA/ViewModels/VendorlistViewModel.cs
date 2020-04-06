@@ -17,21 +17,24 @@ namespace HA.ViewModels
         private AccountService accntService = new AccountService();
         public VendorlistViewModel()
         {
-           
+
         }
-        public VendorlistViewModel(string name)
+        public VendorlistViewModel(string name, string location)
         {
+            CurrentLocation = location;
             CategoryName = name;
             GetVendorsList();
         }
         public ICommand BookNowCommand => new Command(BookNow_clicked);
         public ICommand ClosePopUpCommand => new Command(Close_clicked);
         public ICommand BookAppointmentCommand => new Command(BookAppointment_clicked);
+        public ICommand ClearCommand => new Command(Clear_clicked);
         public event PropertyChangedEventHandler PropertyChanged;
         private string _categoryName, _currentLocation;
-        string _vendorsCount,_firstname,_lastname,_email,_phone,_reason,_referralphone;
+        string _vendorsCount, _firstname, _lastname, _email, _phone, _reason, _referralphone;
         bool _IsSubmitFormVisible;
-        DateTime _selectedDate, _selectedTime,_minDate;
+        DateTime _selectedDate, _minDate;
+        DateTime _selectedTime;
         int _teacherId;
         public int TeacherId
         {
@@ -40,7 +43,7 @@ namespace HA.ViewModels
         }
         public DateTime MinDate
         {
-            get 
+            get
             {
                 _minDate = DateTime.UtcNow;
                 return _minDate;
@@ -89,7 +92,7 @@ namespace HA.ViewModels
         }
         public bool IsSubmitFormVisible
         {
-            get { return _IsSubmitFormVisible ; }
+            get { return _IsSubmitFormVisible; }
             set { _IsSubmitFormVisible = value; NotifyPropertyChanged(); }
         }
         public string CurrentLocation
@@ -100,13 +103,13 @@ namespace HA.ViewModels
         public string CategoryName
         {
             get { return _categoryName; }
-            set { _categoryName = value;NotifyPropertyChanged(); }
+            set { _categoryName = value; NotifyPropertyChanged(); }
         }
         public string VendorsCount
         {
-            get 
+            get
             {
-                return _vendorsCount; 
+                return _vendorsCount;
             }
             set { _vendorsCount = value; NotifyPropertyChanged(); }
         }
@@ -131,12 +134,23 @@ namespace HA.ViewModels
             try
             {
                 List<UserIndex> users = new List<UserIndex>();
-                await Task.Run(() =>
-                {
-                    users = accntService.GetVendorslist();
-                });
 
-                Vendors = users.Where(x => x.CategoryName == CategoryName).ToList();
+                if (string.IsNullOrEmpty(CurrentLocation))
+                {
+                    await Task.Run(() =>
+                    {
+                        users = accntService.GetVendorslist();
+                    });
+                    Vendors = users.Where(x => x.CategoryName == CategoryName).ToList();
+                }
+                else
+                {
+                    await Task.Run(() =>
+                    {
+                        users = accntService.GetVendors(CurrentLocation);
+                    });
+                    Vendors = users.Where(x => x.CategoryName == CategoryName).ToList();
+                }
                 var Count = Vendors.Count.ToString();
                 VendorsCount = "(" + Count + ")";
             }
@@ -160,25 +174,45 @@ namespace HA.ViewModels
         {
             UserQueryDTO userQuery = new UserQueryDTO()
             {
-                FirstName=Firstname,
-                LastName=Lastname,
-                EMailID=Email,
-                PhoneNo=Phone,
-                selelecteddate=SelectedDate,
-                time=DateTime.UtcNow,
-                referalphonenumber=ReferralPhone,
-                Query=Reason,
-                TeacherID=TeacherId
+                FirstName = Firstname,
+                LastName = Lastname,
+                EMailID = Email,
+                PhoneNo = Phone,
+                selelecteddate = SelectedDate.Date,
+                time =SelectedTime.ToLocalTime(),
+                referalphonenumber = ReferralPhone,
+                Query = Reason,
+                TeacherID = TeacherId
             };
-            bool result=false;
+            bool result = false;
             await Task.Run(() =>
             {
-                result=accntService.BookAppointment(userQuery);
+                result = accntService.BookAppointment(userQuery);
             });
             if (result)
-                await Application.Current.MainPage.DisplayAlert("Message", "Your appointment is booked", "Ok");
+            {
+                await Application.Current.MainPage.DisplayAlert("Message", "Your Appointment is booked", "Ok");
+                Clear_clicked();
+                IsSubmitFormVisible = false;
+            }
+
+
             else
-                await Application.Current.MainPage.DisplayAlert("Message", "Your appointment is not booked", "Ok");
+            {
+                await Application.Current.MainPage.DisplayAlert("Message", "Error in booking Appointment", "Ok");
+            }
+        }
+
+        private void Clear_clicked()
+        {
+            Firstname = string.Empty;
+            Lastname = string.Empty;
+            Email = string.Empty;
+            Phone = string.Empty;
+            SelectedDate = DateTime.Now;
+            SelectedTime = DateTime.UtcNow;
+            ReferralPhone = string.Empty;
+            Reason = string.Empty;
         }
         protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {

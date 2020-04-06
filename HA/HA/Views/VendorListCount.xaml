@@ -93,7 +93,7 @@
                             <Entry Text="{Binding ReferralPhone}" HorizontalOptions="FillAndExpand" Placeholder="Referral phone# if you have one"></Entry>
                             <StackLayout Orientation="Horizontal" Spacing="10">
                                 <Button Text="BookNow" BackgroundColor="#03a9f4" CornerRadius="6" Command="{Binding BookAppointmentCommand}"></Button>
-                                <Button Text="Clear" CornerRadius="6"></Button>
+                                <Button Text="Clear" CornerRadius="6" Command="{Binding ClearCommand}"></Button>
                             </StackLayout>
                         </StackLayout>
                     </StackLayout>
