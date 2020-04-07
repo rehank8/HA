@@ -69,15 +69,15 @@
                                 <Entry Text="{Binding Firstname}" Placeholder="Firstname" HorizontalOptions="FillAndExpand"></Entry>
                                 <Entry Text="{Binding Lastname}" Grid.Column="1" Placeholder="Lastname" HorizontalOptions="FillAndExpand"></Entry>
                             </Grid>
-                            <!--<Entry Text="" Placeholder="Email" HorizontalOptions="FillAndExpand"></Entry>
-                            <Entry Text="" Placeholder="Phone" HorizontalOptions="FillAndExpand"></Entry>-->
-                            <Grid>
+                            <Entry Text="{Binding Email}" Placeholder="Email" HorizontalOptions="FillAndExpand"></Entry>
+                            <Entry Text="{Binding Phone}" Keyboard="Numeric" MaxLength="10" Placeholder="Phone" HorizontalOptions="FillAndExpand"></Entry>
+                            <!--<Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <Entry Text="{Binding Email}" Placeholder="Email" HorizontalOptions="FillAndExpand"></Entry>
                                 <Entry Text="{Binding Phone}" Grid.Column="1" Placeholder="Phone" HorizontalOptions="FillAndExpand"></Entry>
-                            </Grid>
+                            </Grid>-->
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"></ColumnDefinition>

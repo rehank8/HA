@@ -3,6 +3,8 @@ using HA.Model;
 using HA.Services;
 using HA.Views;
 using MvvmHelpers;
+using Plugin.Geolocator;
+using Plugin.Geolocator.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,8 +21,10 @@ namespace HA.ViewModels
     public class RegisterViewModel : INotifyPropertyChanged
     {
         AccountService accntService = new AccountService();
+        LoginResponse login = Helper.UserProfileDBService.GetAuthUser();
         public RegisterViewModel()
         {
+            IsLoginornot();
             GetLocation();
             GetVendorsByLocation();
         }
@@ -33,8 +37,9 @@ namespace HA.ViewModels
         public ICommand EmptySearchCommand => new Command(Search1_clicked);
         public ICommand CloseRegCommand => new Command(CloseReg_clicked);
         public ICommand LoginCloseCommand => new Command(Loginclose_clicked);
+        public ICommand LogoutCommand => new Command(Logout_clicked);
         private bool _IsRegisterVisible;
-        private bool _IsLoginVisible;
+        private bool _IsLoginVisible, _isLogin, _isLogout;
         public bool result = false;
         private string _email, _password, _UserType, _currentLocation;
 
@@ -77,6 +82,16 @@ namespace HA.ViewModels
         {
             get { return _isEmail; }
             set { _isEmail = value; NotifyPropertyChanged(); }
+        }
+        public bool IsLogin
+        {
+            get { return _isLogin; }
+            set { _isLogin = value; NotifyPropertyChanged(); }
+        }
+        public bool IsLogout
+        {
+            get { return _isLogout; }
+            set { _isLogout = value; NotifyPropertyChanged(); }
         }
         public bool IsPassword
         {
@@ -210,6 +225,7 @@ namespace HA.ViewModels
                 });
                 if (loginResponse.Isvalid)
                 {
+                    Helper.UserProfileDBService.Save(loginResponse);
                     string token = loginResponse.access_token;
                     string tokenType = loginResponse.token_type;
                     string Authorization_Token = tokenType + " " + token;
@@ -219,7 +235,7 @@ namespace HA.ViewModels
                     if (userProfile.FKRoleId == 2)
                         Application.Current.MainPage = new NavigationPage(new VendorsList());
                     else if (userProfile.FKRoleId == 3)
-                        Application.Current.MainPage = new NavigationPage(new UserList());
+                        Application.Current.MainPage = new NavigationPage(new HomePage());
                 }
                 else
                 {
@@ -241,22 +257,18 @@ namespace HA.ViewModels
         {
             try
             {
-                var request = new GeolocationRequest(GeolocationAccuracy.Best);
-                var locations = await Geolocation.GetLocationAsync(request);
+                var locator = CrossGeolocator.Current;
+                locator.DesiredAccuracy = 100;
 
-                if (locations != null)
+                var position = await locator.GetLastKnownLocationAsync();
+                position = await locator.GetPositionAsync(TimeSpan.FromSeconds(20), null, true);
+                var addresses = await locator.GetAddressesForPositionAsync(position, null);
+                var address = addresses.FirstOrDefault();
+               
+                if (address != null )
                 {
-                    var placemarks = await Geocoding.GetPlacemarksAsync(locations.Latitude, locations.Longitude);
-                    var placemark = placemarks?.FirstOrDefault();
-                    if (placemark != null)
-                    {
-                        if (locations.IsFromMockProvider)
-                        {
-                            CurrentLocation = placemark.Locality;
-                        }
-                    }
+                    CurrentLocation = address.Locality;
                 }
-
             }
             catch (FeatureNotSupportedException fnsEx)
             {
@@ -284,8 +296,8 @@ namespace HA.ViewModels
         async void List_clicked(object obj)
         {
             var e = obj as UserIndex;
-           // UserIndex categoryName = null;
-           // categoryName = e.CurrentSelection.FirstOrDefault() as UserIndex;
+            // UserIndex categoryName = null;
+            // categoryName = e.CurrentSelection.FirstOrDefault() as UserIndex;
             await Application.Current.MainPage.Navigation.PushAsync(new VendorListCount(e.CategoryName, CurrentLocation));
         }
 
@@ -313,6 +325,28 @@ namespace HA.ViewModels
             {
 
                 throw;
+            }
+        }
+
+        private void IsLoginornot()
+        {
+            if (login != null)
+            {
+                IsLogout = true; IsLogin = false;
+            }
+            else
+            {
+                IsLogin = true; IsLogout = false;
+            }
+        }
+        async void Logout_clicked()
+        {
+            bool isLogoutornot = await Application.Current.MainPage.DisplayAlert("Alert", "Are you sure you want to Logout?", "Yes", "No");
+            if (isLogoutornot)
+            {
+                Helper.UserProfileDBService.Delete();
+                Helper.LoginResponse = null;
+                Application.Current.MainPage = new NavigationPage(new HomePage());
             }
         }
         protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")

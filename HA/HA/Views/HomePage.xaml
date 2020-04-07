@@ -12,22 +12,26 @@
                 <Frame Padding="0" CornerRadius="0" Margin="0" VerticalOptions="Start" HorizontalOptions="FillAndExpand" HeightRequest="50" BackgroundColor="#03a9f4">
                     <StackLayout Padding="0" Spacing="10">
                         <StackLayout Orientation="Horizontal" HorizontalOptions="End" VerticalOptions="CenterAndExpand" Margin="0,0,10,0">
-                            <Label Text="LOGIN" FontSize="Default" TextColor="White" Margin="0,0,10,0">
+                            <Label Text="LOGIN" IsVisible="{Binding IsLogin}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding GoToLoginCommand}"></TapGestureRecognizer>
                                 </Label.GestureRecognizers>
                             </Label>
-                            <Label Text="REGISTER" FontSize="Default" TextColor="White" Margin="0,0,10,0">
+                            <Label Text="REGISTER" IsVisible="{Binding IsLogin}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding RegistrationCommand}"></TapGestureRecognizer>
                                 </Label.GestureRecognizers>
                             </Label>
-
-                            <!--<Label Text="LIST" FontSize="Default" TextColor="White" Margin="0,0,10,0">
+                            <Label Text="HELLO USER!" IsVisible="{Binding IsLogout}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
                                 <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding GoToListCommand}"></TapGestureRecognizer>
+                                    <TapGestureRecognizer Command="{Binding RegistrationCommand}"></TapGestureRecognizer>
                                 </Label.GestureRecognizers>
-                            </Label>-->
+                            </Label>
+                            <Label Text="LOGOUT" IsVisible="{Binding IsLogout}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding LogoutCommand}"></TapGestureRecognizer>
+                                </Label.GestureRecognizers>
+                            </Label>
                         </StackLayout>
                     </StackLayout>
                 </Frame>
