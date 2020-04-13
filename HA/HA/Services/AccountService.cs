@@ -20,6 +20,7 @@ namespace HA.Services
         private string getvendorsdetail = "https://dmnerdbooking.azurewebsites.net/api/homeapi/venderdetail/{id}";
 
         private string booking = "https://dmnerdbooking.azurewebsites.net/api/homeapi/bookappoinment/";
+        private string getDateTimeUrl = "https://dmnerdbooking.azurewebsites.net/api/homeapi/getvendoravailabletimebydate/";
 
 
 
@@ -131,7 +132,7 @@ namespace HA.Services
                 loc = string.Empty;
             }
             //client.DefaultRequestHeaders.Add("Authorization", "Bearer " + Setters.AuthenticationModel.Token);
-            var response = client.GetAsync(getvendorsurl +loc).Result;
+            var response = client.GetAsync(getvendorsurl + loc).Result;
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var result = response.Content.ReadAsStringAsync().Result;
@@ -190,6 +191,22 @@ namespace HA.Services
             {
                 throw;
             }
+        }
+        public List<string> GetVendorAvailableTimeByDate(DateTime selectedDate, long teacherID, long classID)
+        {
+            var response = client.GetAsync(getDateTimeUrl + "?selectedDate=" + selectedDate + "&teacherID=" + teacherID + "&classID=" + classID).Result;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                List<string> vendorsdateTime = JsonConvert.DeserializeObject<List<string>>(result);
+                return vendorsdateTime;
+
+            }
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                throw new ApplicationException("Could not get MoodHistory for the user");
+            }
+            return null;
         }
     }
 }

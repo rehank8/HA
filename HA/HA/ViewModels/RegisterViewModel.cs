@@ -39,7 +39,7 @@ namespace HA.ViewModels
         public ICommand LoginCloseCommand => new Command(Loginclose_clicked);
         public ICommand LogoutCommand => new Command(Logout_clicked);
         private bool _IsRegisterVisible;
-        private bool _IsLoginVisible, _isLogin, _isLogout;
+        private bool _IsLoginVisible, _isLogin, _isLogout,_isBusy;
         public bool result = false;
         private string _email, _password, _UserType, _currentLocation;
 
@@ -92,6 +92,11 @@ namespace HA.ViewModels
         {
             get { return _isLogout; }
             set { _isLogout = value; NotifyPropertyChanged(); }
+        }
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set { _isBusy = value; NotifyPropertyChanged(); }
         }
         public bool IsPassword
         {
@@ -257,6 +262,7 @@ namespace HA.ViewModels
         {
             try
             {
+                IsBusy = true;
                 var locator = CrossGeolocator.Current;
                 locator.DesiredAccuracy = 100;
 
@@ -272,6 +278,10 @@ namespace HA.ViewModels
             }
             catch (FeatureNotSupportedException fnsEx)
             {
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
@@ -298,7 +308,9 @@ namespace HA.ViewModels
             var e = obj as UserIndex;
             // UserIndex categoryName = null;
             // categoryName = e.CurrentSelection.FirstOrDefault() as UserIndex;
+            IsBusy = true;
             await Application.Current.MainPage.Navigation.PushAsync(new VendorListCount(e.CategoryName, CurrentLocation));
+            IsBusy = false;
         }
 
         private void Search_clicked()
@@ -316,15 +328,21 @@ namespace HA.ViewModels
         {
             try
             {
+                IsBusy = true;
                 await Task.Run(() =>
                 {
                     Vendors = accntService.GetVendors(CurrentLocation);
                 });
+                
             }
             catch (Exception ex)
             {
 
                 throw;
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 

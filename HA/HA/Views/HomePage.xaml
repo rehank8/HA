@@ -125,6 +125,7 @@
             <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" IsVisible="{Binding Vendors, Converter={StaticResource IsEmptyListConverter}, ConverterParameter=true}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
                 <Label Text="No Records" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="Large" TextColor="Black"></Label>
             </StackLayout>
+            <ActivityIndicator IsVisible="{Binding IsBusy}" Color="#11A2CD" IsRunning="True" AbsoluteLayout.LayoutFlags="All"  AbsoluteLayout.LayoutBounds="0.5,0.5,.1,.1"></ActivityIndicator>
         </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

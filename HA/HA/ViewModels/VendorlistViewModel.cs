@@ -1,5 +1,6 @@
 ﻿using HA.Model;
 using HA.Services;
+using HA.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,6 +22,7 @@ namespace HA.ViewModels
         }
         public VendorlistViewModel(string name, string location)
         {
+            IsCalender = false;
             CurrentLocation = location;
             CategoryName = name;
             GetVendorsList();
@@ -28,34 +30,60 @@ namespace HA.ViewModels
         public ICommand BookNowCommand => new Command(BookNow_clicked);
         public ICommand ClosePopUpCommand => new Command(Close_clicked);
         public ICommand BookAppointmentCommand => new Command(BookAppointment_clicked);
+        public ICommand ImageCommand => new Command(Image_clicked);
+        public ICommand DayCommand => new Command(Day_clicked);
         public ICommand ClearCommand => new Command(Clear_clicked);
+        //public ICommand SelectedTimeCommand => new Command(SelectedTime_clicked);
         public event PropertyChangedEventHandler PropertyChanged;
         private string _categoryName, _currentLocation;
         string _vendorsCount, _firstname, _lastname, _email, _phone, _reason, _referralphone;
-        bool _IsSubmitFormVisible;
-        DateTime _selectedDate, _minDate;
-        DateTime _selectedTime;
+        bool _IsSubmitFormVisible, _isCalender, _isTime, _isBusy;
+        DateTime _minDate;
+        string _selectedDate;
+        string _selectedTime;
         int _teacherId;
+        List<string> _VendorsdateTime;
+        public bool IsCalender
+        {
+            get { return _isCalender; }
+            set { _isCalender = value; NotifyPropertyChanged(); }
+        }
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set { _isBusy = value; NotifyPropertyChanged(); }
+        }
+        public bool IsTime
+        {
+            get { return _isTime; }
+            set { _isTime = value; NotifyPropertyChanged(); }
+        }
+        public List<string> VendorsdateTime
+        {
+            get { return _VendorsdateTime; }
+            set { _VendorsdateTime = value; NotifyPropertyChanged(); }
+        }
+
         public int TeacherId
         {
             get { return _teacherId; }
             set { _teacherId = value; NotifyPropertyChanged(); }
         }
-        public DateTime MinDate
+        public DateTime SDate
         {
             get
             {
-                _minDate = DateTime.UtcNow;
+
                 return _minDate;
             }
             set { _minDate = value; NotifyPropertyChanged(); }
         }
-        public DateTime SelectedDate
+        public string SelectedDate
         {
             get { return _selectedDate; }
-            set { _selectedDate = value; NotifyPropertyChanged(); }
+            set { _selectedDate = value.Replace(" 00:00:00",""); NotifyPropertyChanged(); }
         }
-        public DateTime SelectedTime
+        public string SelectedTime
         {
             get { return _selectedTime; }
             set { _selectedTime = value; NotifyPropertyChanged(); }
@@ -133,14 +161,15 @@ namespace HA.ViewModels
         {
             try
             {
+                IsBusy = true;
                 List<UserIndex> users = new List<UserIndex>();
-
                 if (string.IsNullOrEmpty(CurrentLocation))
                 {
                     await Task.Run(() =>
                     {
                         users = accntService.GetVendorslist();
                     });
+
                     Vendors = users.Where(x => x.CategoryName == CategoryName).ToList();
                 }
                 else
@@ -159,47 +188,107 @@ namespace HA.ViewModels
 
                 throw;
             }
+            finally
+            {
+                IsBusy = false;
+            }
         }
         async void BookNow_clicked(object obj)
         {
             IsSubmitFormVisible = true;
+            IsCalender = false;
             var item = obj as UserIndex;
+            Vendor = item;
             TeacherId = Convert.ToInt32(item.Teacherid);
         }
         private void Close_clicked()
         {
             IsSubmitFormVisible = false;
         }
+        void Image_clicked()
+        {
+            IsCalender = true;
+        }
+        async void Day_clicked()
+        {
+            try
+            {
+                IsCalender = false; IsTime = true;
+                SDate = (Convert.ToDateTime(SelectedDate));
+                IsBusy = true;
+                await Task.Run(() =>
+                {
+                    VendorsdateTime = accntService.GetVendorAvailableTimeByDate(SDate, Vendor.Teacherid, Vendor.ListingId);
+                });
+                VendorsdateTime = VendorsdateTime.Select(t => t.Replace("737527.", "")).ToList();
+                if (VendorsdateTime.Count == 0)
+                {
+                    VendorsdateTime = new List<string>()
+                {
+                    "No Available Time"
+                };
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+        //void SelectedTime_clicked(object obj)
+        //{
+
+        //}
         async void BookAppointment_clicked()
         {
-            UserQueryDTO userQuery = new UserQueryDTO()
+            try
             {
-                FirstName = Firstname,
-                LastName = Lastname,
-                EMailID = Email,
-                PhoneNo = Phone,
-                selelecteddate = SelectedDate.Date,
-                time =SelectedTime.ToLocalTime(),
-                referalphonenumber = ReferralPhone,
-                Query = Reason,
-                TeacherID = TeacherId
-            };
-            bool result = false;
-            await Task.Run(() =>
-            {
-                result = accntService.BookAppointment(userQuery);
-            });
-            if (result)
-            {
-                await Application.Current.MainPage.DisplayAlert("Message", "Your Appointment is booked", "Ok");
-                Clear_clicked();
-                IsSubmitFormVisible = false;
+                UserQueryDTO userQuery = new UserQueryDTO()
+                {
+                    FirstName = Firstname,
+                    LastName = Lastname,
+                    EMailID = Email,
+                    PhoneNo = Phone,
+                    selelecteddate = SDate,
+                    time = Convert.ToDateTime(SelectedTime),
+                    referalphonenumber = ReferralPhone,
+                    Query = Reason,
+                    TeacherID = TeacherId
+                };
+
+                bool result = false;
+                IsBusy = true;
+                await Task.Run(() =>
+                {
+                    result = accntService.BookAppointment(userQuery);
+                });
+                if (result)
+                {
+                    await Application.Current.MainPage.DisplayAlert("Message", "Your Appointment is booked", "Ok");
+                    Clear_clicked();
+                    IsSubmitFormVisible = false;
+
+                }
+
+
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Message", "Error in booking Appointment", "Ok");
+                    Clear_clicked();
+                }
             }
-
-
-            else
+            catch (Exception)
             {
-                await Application.Current.MainPage.DisplayAlert("Message", "Error in booking Appointment", "Ok");
+
+                throw;
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
@@ -209,11 +298,19 @@ namespace HA.ViewModels
             Lastname = string.Empty;
             Email = string.Empty;
             Phone = string.Empty;
-            SelectedDate = DateTime.Now;
-            SelectedTime = DateTime.UtcNow;
+            SelectedDate = string.Empty;
+            SelectedTime = string.Empty;
             ReferralPhone = string.Empty;
             Reason = string.Empty;
         }
+        //private async Task<List<string>> GetVendorsDateTime(DateTime selectedDate, long teacherID, long classID)
+        //{
+        //    await Task.Run(() =>
+        //    {
+        //        VendorsdateTime = accntService.GetVendorAvailableTimeByDate(selectedDate, teacherID, classID);
+        //    });
+        //    return VendorsdateTime;
+        //}
         protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:behavior="clr-namespace:HA.Behaviors"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:behavior="clr-namespace:HA.Behaviors" xmlns:controls="clr-namespace:Xamarin.Plugin.Calendar.Controls;assembly=Xamarin.Plugin.Calendar"
              mc:Ignorable="d"
              x:Class="HA.Views.VendorListCount">
     <ContentPage.Content>
@@ -71,19 +71,23 @@
                             </Grid>
                             <Entry Text="{Binding Email}" Placeholder="Email" HorizontalOptions="FillAndExpand"></Entry>
                             <Entry Text="{Binding Phone}" Keyboard="Numeric" MaxLength="10" Placeholder="Phone" HorizontalOptions="FillAndExpand"></Entry>
-                            <!--<Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
-                                <Entry Text="{Binding Email}" Placeholder="Email" HorizontalOptions="FillAndExpand"></Entry>
-                                <Entry Text="{Binding Phone}" Grid.Column="1" Placeholder="Phone" HorizontalOptions="FillAndExpand"></Entry>
-                            </Grid>-->
                             <Grid>
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"></ColumnDefinition>
                                     <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="2*"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                <DatePicker Date="{Binding SelectedDate}" MinimumDate="{Binding MinDate}" HorizontalOptions="FillAndExpand"></DatePicker>
-                                <TimePicker Time="{Binding SelectedTime}" Grid.Column="1" HorizontalOptions="FillAndExpand"></TimePicker>
+                                <Entry Text="{Binding SelectedDate,StringFormat='{0:MMMM dd, yyyy}'}" Placeholder="Select Date" HorizontalOptions="FillAndExpand"></Entry>
+                                <Image Source="calendar.png" HeightRequest="30" Grid.Column="1">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ImageCommand}"></TapGestureRecognizer>
+                                    </Image.GestureRecognizers>
+                                </Image>
+                                <Picker ItemsSource="{Binding VendorsdateTime}" IsEnabled="{Binding IsTime}" SelectedItem="{Binding SelectedTime}" Title="Select Time" ItemDisplayBinding="{Binding .}" Grid.Column="2" HorizontalOptions="FillAndExpand">
+                                    <Picker.Behaviors>
+                                        <behavior:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding SelectedTimeCommand}" CommandParameter="{Binding SelectedTime}"></behavior:EventToCommandBehavior>
+                                    </Picker.Behaviors>
+                                </Picker>
                             </Grid>
                             <!--<DatePicker HorizontalOptions="FillAndExpand"></DatePicker>
                             <TimePicker HorizontalOptions="FillAndExpand"></TimePicker>-->
@@ -99,7 +103,42 @@
                     </StackLayout>
                 </Frame>
             </ContentView>
-
+            <ContentView x:Name="IsCalender" IsVisible="{Binding IsCalender}" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent" AbsoluteLayout.LayoutBounds="0, 0, 1, .9" AbsoluteLayout.LayoutFlags="All">
+                <controls:Calendar AnimateCalendar="True"
+                                   Margin="50"
+                                   BackgroundColor="LightGray"
+            MonthLabelColor="Red"
+YearLabelColor="Blue"
+SelectedDateColor="Red"
+SelectedDayBackgroundColor="DarkCyan"
+EventIndicatorColor="Red"
+EventIndicatorSelectedColor="White"
+DaysTitleColor="Orange"
+SelectedDayTextColor="Cyan"
+DeselectedDayTextColor="Blue"
+OtherMonthDayColor="Gray"
+TodayOutlineColor="Blue"
+TodayFillColor="Silver"
+                                   SelectedDate="{Binding SelectedDate}"
+            DayTappedCommand="{Binding DayCommand}">
+                    <!--<controls:Calendar.EventTemplate>
+                        <DataTemplate>
+                            <StackLayout
+                Padding="15,0,0,0">
+                                <Label
+                    Text="{Binding AvailableTime}"
+                    FontAttributes="Bold"
+                    FontSize="Medium" />
+                                <Label
+                    Text="{Binding Description}"
+                    FontSize="Small"
+                    LineBreakMode="WordWrap" />
+                            </StackLayout>
+                        </DataTemplate>
+                    </controls:Calendar.EventTemplate>-->
+                </controls:Calendar>
+            </ContentView>
+            <ActivityIndicator IsVisible="{Binding IsBusy}" Color="#11A2CD" IsRunning="True" AbsoluteLayout.LayoutFlags="All"  AbsoluteLayout.LayoutBounds="0.5,0.5,.1,.1"></ActivityIndicator>
         </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>
