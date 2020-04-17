@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="HA.Views.MyRecentApp">
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView x:Name="lst" ItemsSource="{Binding Users}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid x:Name="gd" RowSpacing="5" ColumnSpacing="5" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                                    <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="{Binding PhotoUrl}" HeightRequest="40" VerticalOptions="CenterAndExpand"></Image>
+                                <StackLayout Grid.Column="1" HorizontalOptions="Start">
+                                    <Label Text="{Binding Name}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"></Label>
+                                    <Label Text="{Binding Name}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center">
+                                    </Label>
+                                </StackLayout>
+                                <Button Text="BookNow" Grid.Column="2" BackgroundColor="#03a9f4" BindingContext="{Binding Source={x:Reference lst},Path=BindingContext}" Command="{Binding BookNowCommand}" CommandParameter="{Binding Source={x:Reference gd},Path=BindingContext}" FontSize="Small" VerticalOptions="CenterAndExpand" HorizontalOptions="End"></Button>
+                            </Grid>
+                            <!--</Frame>-->
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

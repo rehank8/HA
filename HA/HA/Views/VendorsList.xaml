@@ -2,16 +2,81 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="clr-namespace:Xamarin.Plugin.Calendar.Controls;assembly=Xamarin.Plugin.Calendar" xmlns:behavior="clr-namespace:HA.Behaviors"
              mc:Ignorable="d"
              x:Class="HA.Views.VendorsList"
-             Title="Vendor"
-             NavigationPage.HasBackButton="True">
+             Title="Vendors"
+             NavigationPage.HasNavigationBar="True"
+             NavigationPage.HasBackButton="False">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Name="imgLogout" Text="Logout" Priority="0" Order="Primary" Command="{Binding LogoutCommand}" />
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Vendor Page!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+         
+            <StackLayout>
+                <controls:Calendar AnimateCalendar="True"
+                              
+            MonthLabelColor="Red"
+YearLabelColor="Blue"
+SelectedDateColor="Red"
+SelectedDayBackgroundColor="DarkCyan"
+EventIndicatorColor="Red"
+EventIndicatorSelectedColor="White"
+DaysTitleColor="Orange"
+SelectedDayTextColor="Cyan"
+DeselectedDayTextColor="Blue"
+OtherMonthDayColor="Gray"
+TodayOutlineColor="Blue"
+TodayFillColor="Silver"
+                               SelectedDate="{Binding SelectedDate}"
+            DayTappedCommand="{Binding DayCommand}">
+                    <controls:Calendar.EventTemplate>
+                        <DataTemplate>
+                            <StackLayout
+                Padding="15,0,0,0">
+                                <Label
+                    Text="{Binding .}"
+                    FontAttributes="Bold"
+                    FontSize="Medium" />
+                                <!--<Label
+                    Text="{Binding Description}"
+                    FontSize="Small"
+                    LineBreakMode="WordWrap" />-->
+                            </StackLayout>
+                        </DataTemplate>
+                    </controls:Calendar.EventTemplate>
+                </controls:Calendar>
+            </StackLayout>
+            
+            <StackLayout>
+                <!--<ListView ItemsSource="{Binding VendorsDateTime}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Label Text="{Binding .}"></Label>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>-->
+                <CollectionView x:Name="lstNew" SelectionMode="Single" Margin="10" ItemsSource="{Binding VendorsDateTime}">
+                    <CollectionView.Behaviors>
+                        <behavior:EventToCommandBehavior EventName="SelectionChanged" Command="{Binding ListSelectedCommand}"></behavior:EventToCommandBehavior>
+                    </CollectionView.Behaviors>
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" HorizontalItemSpacing="5" VerticalItemSpacing="5"
+                        Span="2" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Padding="10">
+                                
+                            <Label Text="{Binding .}"></Label>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

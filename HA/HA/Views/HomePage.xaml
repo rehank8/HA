@@ -9,31 +9,45 @@
     <ContentPage.Content>
         <AbsoluteLayout>
             <StackLayout Padding="0"  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
-                <Frame Padding="0" CornerRadius="0" Margin="0" VerticalOptions="Start" HorizontalOptions="FillAndExpand" HeightRequest="50" BackgroundColor="#03a9f4">
-                    <StackLayout Padding="0" Spacing="10">
-                        <StackLayout Orientation="Horizontal" HorizontalOptions="End" VerticalOptions="CenterAndExpand" Margin="0,0,10,0">
-                            <Label Text="LOGIN" IsVisible="{Binding IsLogin}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding GoToLoginCommand}"></TapGestureRecognizer>
-                                </Label.GestureRecognizers>
-                            </Label>
-                            <Label Text="REGISTER" IsVisible="{Binding IsLogin}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding RegistrationCommand}"></TapGestureRecognizer>
-                                </Label.GestureRecognizers>
-                            </Label>
-                            <Label Text="HELLO USER!" IsVisible="{Binding IsLogout}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding RegistrationCommand}"></TapGestureRecognizer>
-                                </Label.GestureRecognizers>
-                            </Label>
-                            <Label Text="LOGOUT" IsVisible="{Binding IsLogout}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding LogoutCommand}"></TapGestureRecognizer>
-                                </Label.GestureRecognizers>
-                            </Label>
-                        </StackLayout>
+                <Frame Padding="0" CornerRadius="0" Margin="0" VerticalOptions="Start" HeightRequest="50" BackgroundColor="#03a9f4">
+                    <StackLayout Padding="0,8,0,0" Spacing="0" VerticalOptions="CenterAndExpand">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <StackLayout Padding="10,0,0,0" Spacing="0" HorizontalOptions="Start" VerticalOptions="CenterAndExpand">
+                                <Label Text="My Recent Appointments" VerticalTextAlignment="Center" TextColor="White" FontSize="Default" IsVisible="{Binding IsLogout}">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding GoToMyRecentCommand}"></TapGestureRecognizer>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </StackLayout>
+                            <StackLayout Grid.Column="1" Orientation="Horizontal" HorizontalOptions="End" VerticalOptions="CenterAndExpand" Margin="0,0,10,0">
+                                <Label Text="LOGIN" IsVisible="{Binding IsLogin}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding GoToLoginCommand}"></TapGestureRecognizer>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <Label Text="REGISTER" IsVisible="{Binding IsLogin}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding RegistrationCommand}"></TapGestureRecognizer>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <Label Text="HELLO USER!" IsVisible="{Binding IsLogout}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding RegistrationCommand}"></TapGestureRecognizer>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <Label Text="LOGOUT" IsVisible="{Binding IsLogout}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding LogoutCommand}"></TapGestureRecognizer>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </StackLayout>
+                            <!--</StackLayout>-->
+                        </Grid>
                     </StackLayout>
+                    
                 </Frame>
                 <StackLayout>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Margin="0,0,10,0">
@@ -59,7 +73,14 @@
                                     <StackLayout>
                                         <Image Source="{Binding PhotoUrl}" HeightRequest="60" VerticalOptions="CenterAndExpand">
                                         </Image>
-                                        <Label Text="{Binding ListingName}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"></Label>
+                                        <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding CategoryName}"></Span>
+                                                    <Span Text="{Binding VendorsCount}"></Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
                                         <StackLayout.GestureRecognizers>
                                             <TapGestureRecognizer  BindingContext="{Binding Source={x:Reference lstNew},Path=BindingContext}" Command="{Binding ListSelectedCommand}" CommandParameter="{Binding Source={x:Reference frm},Path=BindingContext}"></TapGestureRecognizer>
                                         </StackLayout.GestureRecognizers>

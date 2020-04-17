@@ -10,8 +10,9 @@ namespace HA
    public class Helper
     {
         static UserProfileDBService _db1;
+        static RoleIdDbService _dbrole;
         public static string databasepath1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "HA.db3");
-
+        public static string databasepathrole = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "HArole.db3");
         public static UserProfileDBService UserProfileDBService
         {
             get
@@ -24,7 +25,24 @@ namespace HA
                 return _db1;
             }
         }
+        public static RoleIdDbService RoleIdDbService
+        {
+            get
+            {
+                if (_dbrole == null)
+                {
+                    _dbrole = new RoleIdDbService(databasepathrole);
+
+                }
+                return _dbrole;
+            }
+        }
         public static LoginResponse LoginResponse
+        {
+            get;
+            set;
+        }
+        public static UserProfile UserProfile
         {
             get;
             set;

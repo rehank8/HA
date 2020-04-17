@@ -1,4 +1,5 @@
-﻿using HA.Views;
+﻿using HA.Model;
+using HA.Views;
 using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
@@ -8,11 +9,25 @@ namespace HA
 {
     public partial class App : Application
     {
+        LoginResponse login = Helper.UserProfileDBService.GetAuthUser();
+        UserProfile user = Helper.RoleIdDbService.GetAuthUser();
         public App()
         {
             InitializeComponent();
-
-            MainPage = new NavigationPage(new HomePage());
+            if (login != null)
+            {
+                if (user != null)
+                {
+                    if (user.FKRoleId == 2)
+                        MainPage = new NavigationPage(new VendorsList());
+                    else if (user.FKRoleId == 3)
+                        MainPage = new NavigationPage(new HomePage());
+                }
+                else
+                    MainPage = new NavigationPage(new HomePage());
+            }
+            else
+                MainPage = new NavigationPage(new HomePage());
             //MainPage = new NavigationPage(new List());
 
         }

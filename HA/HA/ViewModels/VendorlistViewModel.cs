@@ -38,7 +38,7 @@ namespace HA.ViewModels
         private string _categoryName, _currentLocation;
         string _vendorsCount, _firstname, _lastname, _email, _phone, _reason, _referralphone;
         bool _IsSubmitFormVisible, _isCalender, _isTime, _isBusy;
-        DateTime _minDate;
+        DateTime _minDate,_minimumDate;
         string _selectedDate;
         string _selectedTime;
         int _teacherId;
@@ -247,39 +247,49 @@ namespace HA.ViewModels
         {
             try
             {
-                UserQueryDTO userQuery = new UserQueryDTO()
+                if (string.IsNullOrEmpty(Firstname) || string.IsNullOrEmpty(Lastname)|| string.IsNullOrEmpty(Email)|| string.IsNullOrEmpty(Phone))
                 {
-                    FirstName = Firstname,
-                    LastName = Lastname,
-                    EMailID = Email,
-                    PhoneNo = Phone,
-                    selelecteddate = SDate,
-                    time = Convert.ToDateTime(SelectedTime),
-                    referalphonenumber = ReferralPhone,
-                    Query = Reason,
-                    TeacherID = TeacherId
-                };
-
-                bool result = false;
-                IsBusy = true;
-                await Task.Run(() =>
-                {
-                    result = accntService.BookAppointment(userQuery);
-                });
-                if (result)
-                {
-                    await Application.Current.MainPage.DisplayAlert("Message", "Your Appointment is booked", "Ok");
-                    Clear_clicked();
-                    IsSubmitFormVisible = false;
-
+                    await Application.Current.MainPage.DisplayAlert("Error", "Fields can't be empty", "Ok");
                 }
-
-
                 else
                 {
-                    await Application.Current.MainPage.DisplayAlert("Message", "Error in booking Appointment", "Ok");
-                    Clear_clicked();
+                    UserQueryDTO userQuery = new UserQueryDTO()
+                    {
+                        FirstName = Firstname,
+                        LastName = Lastname,
+                        EMailID = Email,
+                        PhoneNo = Phone,
+                        selelecteddate = SDate,
+                        time = Convert.ToDateTime(SelectedTime),
+                        referalphonenumber = ReferralPhone,
+                        Query = Reason,
+                        TeacherID = TeacherId
+                    };
+
+                    bool result = false;
+                    IsBusy = true;
+                    await Task.Run(() =>
+                    {
+                        result = accntService.BookAppointment(userQuery);
+                    });
+                    if (result)
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Message", "Your Appointment is booked", "Ok");
+                        Clear_clicked();
+                        SelectedDate = null;
+                        IsSubmitFormVisible = false;
+                    }
+
+
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Message", "Error in booking Appointment", "Ok");
+                        Clear_clicked();
+                        SelectedDate = null;
+                        IsSubmitFormVisible = false;
+                    }
                 }
+               
             }
             catch (Exception)
             {

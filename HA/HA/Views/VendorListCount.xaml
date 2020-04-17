@@ -83,6 +83,7 @@
                                         <TapGestureRecognizer Command="{Binding ImageCommand}"></TapGestureRecognizer>
                                     </Image.GestureRecognizers>
                                 </Image>
+                                <!--<DatePicker MinimumDate="{Binding MinimumDate}" Date="{Binding SelectedDate}" HorizontalOptions="FillAndExpand"></DatePicker>-->
                                 <Picker ItemsSource="{Binding VendorsdateTime}" IsEnabled="{Binding IsTime}" SelectedItem="{Binding SelectedTime}" Title="Select Time" ItemDisplayBinding="{Binding .}" Grid.Column="2" HorizontalOptions="FillAndExpand">
                                     <Picker.Behaviors>
                                         <behavior:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding SelectedTimeCommand}" CommandParameter="{Binding SelectedTime}"></behavior:EventToCommandBehavior>

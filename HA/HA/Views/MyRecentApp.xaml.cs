@@ -1,5 +1,4 @@
-﻿using HA.Model;
-using HA.ViewModels;
+﻿using HA.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +11,12 @@ using Xamarin.Forms.Xaml;
 namespace HA.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class VendorsList : ContentPage
+    public partial class MyRecentApp : ContentPage
     {
-        public VendorsList()
+        public MyRecentApp()
         {
             InitializeComponent();
-            BindingContext = new VendorsViewModel();
+            BindingContext = new MyRecentAppViewModel();
         }
     }
 }

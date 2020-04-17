@@ -187,9 +187,9 @@ namespace HA.Services
                 }
                 return false;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex.InnerException;
             }
         }
         public List<string> GetVendorAvailableTimeByDate(DateTime selectedDate, long teacherID, long classID)

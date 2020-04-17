@@ -18,7 +18,7 @@ namespace HA.Model
 		public string Insurance { get; set; }
 
 		public string Description { get; set; }
-
+		public string VendorsCount { get; set; }
 
 		public string AvailableDate { get; set; }
 
