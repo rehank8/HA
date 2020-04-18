@@ -257,7 +257,7 @@ namespace HA.ViewModels
                     {
                         FirstName = Firstname,
                         LastName = Lastname,
-                        EMailID = Email,
+                        EMailID = Email.Trim(),
                         PhoneNo = Phone,
                         selelecteddate = SDate,
                         time = Convert.ToDateTime(SelectedTime),
@@ -276,7 +276,7 @@ namespace HA.ViewModels
                     {
                         await Application.Current.MainPage.DisplayAlert("Message", "Your Appointment is booked", "Ok");
                         Clear_clicked();
-                        SelectedDate = null;
+                        SelectedDate = "";
                         IsSubmitFormVisible = false;
                     }
 
@@ -285,7 +285,7 @@ namespace HA.ViewModels
                     {
                         await Application.Current.MainPage.DisplayAlert("Message", "Error in booking Appointment", "Ok");
                         Clear_clicked();
-                        SelectedDate = null;
+                        SelectedDate = "";
                         IsSubmitFormVisible = false;
                     }
                 }
