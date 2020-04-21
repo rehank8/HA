@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Xamarin.Essentials;
 
 namespace HA
 {
@@ -13,6 +14,10 @@ namespace HA
         static RoleIdDbService _dbrole;
         public static string databasepath1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "HA.db3");
         public static string databasepathrole = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "HArole.db3");
+        public static bool CheckNetworkAccess()
+        {
+            return Connectivity.NetworkAccess == NetworkAccess.Internet;
+        }
         public static UserProfileDBService UserProfileDBService
         {
             get

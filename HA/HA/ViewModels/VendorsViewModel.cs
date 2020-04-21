@@ -3,6 +3,8 @@ using HA.Services;
 using HA.Views;
 using MvvmHelpers;
 using Plugin.Geolocator;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,27 +76,41 @@ namespace HA.ViewModels
         }
         async void GetVendors()
         {
-            await Task.Run(() =>
+            if (Helper.CheckNetworkAccess())
             {
-                Vendors = accntService.GetVendors(CurrentLocation);
-            });
+                await Task.Run(() =>
+                {
+                    Vendors = accntService.GetVendors(CurrentLocation);
+                });
+            }
+            else
+            {
+                await Application.Current.MainPage.DisplayAlert("Alert","No Internet!","Ok");
+            }
         }
         private async void GetLocation()
         {
             try
             {
-                IsBusy = true;
-                var locator = CrossGeolocator.Current;
-                locator.DesiredAccuracy = 100;
-                var position = await locator.GetLastKnownLocationAsync();
-                position = await locator.GetPositionAsync(TimeSpan.FromMilliseconds(100), null, true);
-                var addresses = await locator.GetAddressesForPositionAsync(position, null);
-                var address = addresses.FirstOrDefault();
-                if (address != null)
+                if (await RequestForPermission())
                 {
-                    CurrentLocation = address.Locality;
+                    IsBusy = true;
+                    var locator = CrossGeolocator.Current;
+                    locator.DesiredAccuracy = 100;
+                    var position = await locator.GetLastKnownLocationAsync();
+                    position = await locator.GetPositionAsync(TimeSpan.FromMilliseconds(100), null, true);
+                    var addresses = await locator.GetAddressesForPositionAsync(position, null);
+                    var address = addresses.FirstOrDefault();
+                    if (address != null)
+                    {
+                        CurrentLocation = address.Locality;
+                    }
+                    GetVendors();
                 }
-                GetVendors();
+                else 
+                {
+                    await Application.Current.MainPage.DisplayAlert("","Location permission is required","Ok");
+                }
             }
             catch (FeatureNotSupportedException fnsEx)
             {
@@ -130,6 +146,35 @@ namespace HA.ViewModels
                 Application.Current.MainPage = new NavigationPage(new HomePage());
             }
            
+        }
+        async Task<bool> RequestForPermission()
+        {
+            PermissionStatus permissionStatus = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+            try
+            {
+                if (PermissionStatus.Granted != permissionStatus)
+                {
+                    var response = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
+                    if (Device.RuntimePlatform == Device.iOS)
+                    {
+                        var calstatus = response[Permission.Location];
+                        if (PermissionStatus.Granted != calstatus)
+                            return false;
+                    }
+                    else
+                    {
+                        var status = response[Permission.Location];
+                        if (PermissionStatus.Granted != status)
+                            return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return true;
+
         }
     }
 }

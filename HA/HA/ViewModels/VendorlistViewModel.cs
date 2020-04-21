@@ -239,55 +239,58 @@ namespace HA.ViewModels
                 IsBusy = false;
             }
         }
-        //void SelectedTime_clicked(object obj)
-        //{
-
-        //}
         async void BookAppointment_clicked()
         {
             try
             {
-                if (string.IsNullOrEmpty(Firstname) || string.IsNullOrEmpty(Lastname)|| string.IsNullOrEmpty(Email)|| string.IsNullOrEmpty(Phone))
+                if (Helper.CheckNetworkAccess())
                 {
-                    await Application.Current.MainPage.DisplayAlert("Error", "Fields can't be empty", "Ok");
+                    if (string.IsNullOrEmpty(Firstname) || string.IsNullOrEmpty(Lastname) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Phone))
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Error", "Fields can't be empty", "Ok");
+                    }
+                    else
+                    {
+                        UserQueryDTO userQuery = new UserQueryDTO()
+                        {
+                            FirstName = Firstname,
+                            LastName = Lastname,
+                            EMailID = Email.Trim(),
+                            PhoneNo = Phone,
+                            selelecteddate = SDate,
+                            time = Convert.ToDateTime(SelectedTime),
+                            referalphonenumber = ReferralPhone,
+                            Query = Reason,
+                            TeacherID = TeacherId
+                        };
+
+                        bool result = false;
+                        IsBusy = true;
+                        await Task.Run(() =>
+                        {
+                            result = accntService.BookAppointment(userQuery);
+                        });
+                        if (result)
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Message", "Your Appointment is booked", "Ok");
+                            Clear_clicked();
+                            SelectedDate = "";
+                            IsSubmitFormVisible = false;
+                        }
+
+
+                        else
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Message", "Error in booking Appointment", "Ok");
+                            Clear_clicked();
+                            SelectedDate = "";
+                            IsSubmitFormVisible = false;
+                        }
+                    }
                 }
                 else
                 {
-                    UserQueryDTO userQuery = new UserQueryDTO()
-                    {
-                        FirstName = Firstname,
-                        LastName = Lastname,
-                        EMailID = Email.Trim(),
-                        PhoneNo = Phone,
-                        selelecteddate = SDate,
-                        time = Convert.ToDateTime(SelectedTime),
-                        referalphonenumber = ReferralPhone,
-                        Query = Reason,
-                        TeacherID = TeacherId
-                    };
-
-                    bool result = false;
-                    IsBusy = true;
-                    await Task.Run(() =>
-                    {
-                        result = accntService.BookAppointment(userQuery);
-                    });
-                    if (result)
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Message", "Your Appointment is booked", "Ok");
-                        Clear_clicked();
-                        SelectedDate = "";
-                        IsSubmitFormVisible = false;
-                    }
-
-
-                    else
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Message", "Error in booking Appointment", "Ok");
-                        Clear_clicked();
-                        SelectedDate = "";
-                        IsSubmitFormVisible = false;
-                    }
+                    await Application.Current.MainPage.DisplayAlert("Alert", "No Internet!", "Ok");
                 }
                
             }
@@ -301,7 +304,6 @@ namespace HA.ViewModels
                 IsBusy = false;
             }
         }
-
         private void Clear_clicked()
         {
             Firstname = string.Empty;
@@ -313,14 +315,6 @@ namespace HA.ViewModels
             ReferralPhone = string.Empty;
             Reason = string.Empty;
         }
-        //private async Task<List<string>> GetVendorsDateTime(DateTime selectedDate, long teacherID, long classID)
-        //{
-        //    await Task.Run(() =>
-        //    {
-        //        VendorsdateTime = accntService.GetVendorAvailableTimeByDate(selectedDate, teacherID, classID);
-        //    });
-        //    return VendorsdateTime;
-        //}
         protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

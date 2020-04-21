@@ -1,4 +1,5 @@
-﻿using HA.ViewModels;
+﻿using HA.Model;
+using HA.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,10 @@ namespace HA.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MyRecentApp : ContentPage
     {
-        public MyRecentApp()
+        public MyRecentApp(string location,List<UserIndex> Vendors)
         {
             InitializeComponent();
-            BindingContext = new MyRecentAppViewModel();
+            BindingContext = new MyRecentAppViewModel(location,Vendors);
         }
     }
 }
