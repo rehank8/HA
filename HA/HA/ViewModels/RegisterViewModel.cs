@@ -317,7 +317,11 @@ namespace HA.ViewModels
 				}
 				else
 				{
-					await Application.Current.MainPage.DisplayAlert("Alert", "Location permission is required", "Ok");
+					await Task.Run(() => 
+					{
+						Vendors = accntService.GetVendorslist();
+					});
+					await Application.Current.MainPage.DisplayAlert("Alert", "Please enable the GPS", "Ok");
 				}
 			}
 			catch (FeatureNotSupportedException fnsEx)

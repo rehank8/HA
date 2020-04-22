@@ -4,7 +4,8 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:behavior="clr-namespace:HA.Behaviors" xmlns:controls="clr-namespace:Xamarin.Plugin.Calendar.Controls;assembly=Xamarin.Plugin.Calendar"
              mc:Ignorable="d"
-             x:Class="HA.Views.VendorListCount">
+             x:Class="HA.Views.VendorListCount"
+			 Title="Vendors">
     <ContentPage.Content>
         <AbsoluteLayout>
             <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">

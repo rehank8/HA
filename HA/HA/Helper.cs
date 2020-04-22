@@ -1,10 +1,14 @@
 ﻿using HA.Model;
 using HA.Services;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace HA
 {
@@ -18,6 +22,7 @@ namespace HA
         {
             return Connectivity.NetworkAccess == NetworkAccess.Internet;
         }
+     
         public static UserProfileDBService UserProfileDBService
         {
             get

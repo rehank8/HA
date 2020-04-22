@@ -9,21 +9,34 @@
     <ContentPage.Content>
 		<AbsoluteLayout>
 			<StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
-				<ListView x:Name="lst" ItemsSource="{Binding UserAppointments}" HasUnevenRows="True">
+				<ListView x:Name="lst" ItemsSource="{Binding UserAppointments}" IsVisible="{Binding UserAppointments,Converter={StaticResource IsEmptyListConverter}}" HasUnevenRows="True">
 					<ListView.ItemTemplate>
 						<DataTemplate>
 							<ViewCell>
 								<Grid x:Name="gd" RowSpacing="5" ColumnSpacing="5" Margin="5">
 									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="2*"></ColumnDefinition>
+										<ColumnDefinition Width="3*"></ColumnDefinition>
 										<ColumnDefinition Width="*"></ColumnDefinition>
 									</Grid.ColumnDefinitions>
 									<StackLayout Padding="8,0,0,0" HorizontalOptions="Start">
-										<Label TextColor="Black" Text="{Binding VendorName}" FontSize="Large" FontAttributes="Bold"></Label>
+										<Label TextColor="Black" FontSize="Large" FontAttributes="Bold">
+											<Label.FormattedText>
+												<FormattedString>
+													<Span Text="{Binding VendorName}"></Span>
+													<Span Text="("></Span>
+													<Span Text="{Binding VendorPhone}">
+														<Span.GestureRecognizers>
+															<TapGestureRecognizer BindingContext="{Binding Source={x:Reference lst},Path=BindingContext}" Command="{Binding CallVendorCommand}" CommandParameter="{Binding Source={x:Reference gd},Path=BindingContext}"></TapGestureRecognizer>
+														</Span.GestureRecognizers>
+													</Span>
+													<Span Text=")"></Span>
+												</FormattedString>
+											</Label.FormattedText>
+										</Label>
 										<Label TextColor="Black" Text="{Binding BookingDateTime}" FontSize="Medium"></Label>
 										<Label TextColor="Black" Text="{Binding AreaName}" FontSize="Medium"></Label>
 									</StackLayout>
-									<Button Text="BookNow" Grid.Column="2" BackgroundColor="#03a9f4" BindingContext="{Binding Source={x:Reference lst},Path=BindingContext}" Command="{Binding BookNowCommand}" CommandParameter="{Binding Source={x:Reference gd},Path=BindingContext}" FontSize="Small" VerticalOptions="CenterAndExpand" HorizontalOptions="End"></Button>
+									<!--<Button Text="BookNow" Grid.Column="2" BackgroundColor="#03a9f4" BindingContext="{Binding Source={x:Reference lst},Path=BindingContext}" Command="{Binding BookNowCommand}" CommandParameter="{Binding Source={x:Reference gd},Path=BindingContext}" FontSize="Small" VerticalOptions="CenterAndExpand" HorizontalOptions="End"></Button>-->
 								</Grid>
 							</ViewCell>
 						</DataTemplate>
@@ -105,6 +118,9 @@ TodayFillColor="Silver"
 
 				</controls:Calendar>
 			</ContentView>
+			<StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" IsVisible="{Binding UserAppointments, Converter={StaticResource IsEmptyListConverter}, ConverterParameter=true}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+				<Label Text="No Records" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="Large" TextColor="Black"></Label>
+			</StackLayout>
 		</AbsoluteLayout>
 	</ContentPage.Content>
 </ContentPage>

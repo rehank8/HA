@@ -1,14 +1,28 @@
-﻿using System;
+﻿using MvvmHelpers;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace HA.Model
 {
-	public class EndUserAppointment
+	public class EndUserAppointment:BaseViewModel
 	{
 		public string VendorName { get; set; }
 		public string VendorEmail { get; set; }
-		public string VendorPhone { get; set; }
+		string _vendorPhone;
+		public string VendorPhone
+		{
+			get
+			{
+				var e=Regex.Replace(_vendorPhone, ".{3}", "$0-");
+				return e;
+			}
+			set 
+			{
+				_vendorPhone = value;
+			}
+		}
 		public string BusinessName { get; set; }
 		public string AreaName { get; set; }
 		public string CategoryName { get; set; }

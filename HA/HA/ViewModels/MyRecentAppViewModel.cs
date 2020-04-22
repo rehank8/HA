@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace HA.ViewModels
@@ -28,6 +29,7 @@ namespace HA.ViewModels
 		public ICommand ImageCommand => new Command(Image_clicked);
 		public ICommand DayCommand => new Command(Day_clicked);
 		public ICommand ClearCommand => new Command(Clear_clicked);
+		public ICommand CallVendorCommand => new Command(CallVendor);
 		bool _IsSubmitFormVisible;
 		string _vendorsCount, _currentLocation, _firstname, _lastname, _email, _phone, _reason, _referralphone, _categoryName;
 		bool _isCalender, _isTime, _isBusy;
@@ -178,10 +180,11 @@ namespace HA.ViewModels
 				{
 					UserAppointments = accountService.GetUserAppointments();
 				});
+				
 			}
 			else
 			{
-				await Application.Current.MainPage.DisplayAlert("Alert","No Internet!","Ok");
+				await Application.Current.MainPage.DisplayAlert("Alert", "No Internet!", "Ok");
 			}
 		}
 		async void BookNow_clicked(object obj)
@@ -212,18 +215,23 @@ namespace HA.ViewModels
 				}
 				IsCalender = false; IsTime = true;
 				SDate = (Convert.ToDateTime(SelectedDate));
-				IsBusy = true;
-				await Task.Run(() =>
+				if (!(SDate < DateTime.UtcNow.Date))
 				{
-					VendorsdateTime = accountService.GetVendorAvailableTimeByDate(SDate, Vendor.Teacherid, Vendor.ListingId);
-				});
-				VendorsdateTime = VendorsdateTime.Select(t => t.Replace("737527.", "")).ToList();
-				if (VendorsdateTime.Count == 0)
+					IsBusy = true;
+					await Task.Run(() =>
+					{
+						VendorsdateTime = accountService.GetVendorAvailableTimeByDate(SDate, Vendor.Teacherid, Vendor.ListingId);
+					});
+					VendorsdateTime = VendorsdateTime.Select(t => t.Replace("737527.", "")).ToList();
+					if (VendorsdateTime.Count == 0)
+					{
+						VendorsdateTime = new List<string>() { "No Available Time" };
+					}
+				}
+				else
 				{
-					VendorsdateTime = new List<string>()
-				{
-					"No Available Time"
-				};
+					IsCalender = true; IsTime = false;
+					await Application.Current.MainPage.DisplayAlert("Error", "Invalid Date", "Ok");
 				}
 			}
 			catch (Exception)
@@ -305,6 +313,10 @@ namespace HA.ViewModels
 			ReferralPhone = string.Empty;
 			Reason = string.Empty;
 		}
-	
+		void CallVendor(object obj)
+		{
+			var e = obj as EndUserAppointment;
+			PhoneDialer.Open(e.VendorPhone);
+		}
 	}
 }

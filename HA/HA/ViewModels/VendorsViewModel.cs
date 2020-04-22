@@ -130,11 +130,13 @@ namespace HA.ViewModels
                     VendorModel = item;
                 }
             }
-            await Task.Run(() =>
+            if (VendorModel != null)
             {
-                VendorsDateTime = accntService.GetVendorAvailableTimeByDate(SDate, VendorModel.Teacherid, VendorModel.ListingId);
-            });
-            
+                await Task.Run(() =>
+                {
+                    VendorsDateTime = accntService.GetVendorAvailableTimeByDate(SDate, VendorModel.Teacherid, VendorModel.ListingId);
+                });
+            }
         }
         private async void Logout_clicked(object obj)
         {

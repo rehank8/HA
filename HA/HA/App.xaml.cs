@@ -1,5 +1,7 @@
 ﻿using HA.Model;
 using HA.Views;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using Plugin.Toast;
 using System;
 using System.Collections.Generic;
@@ -37,7 +39,7 @@ namespace HA
         {
             CheckConnection(e.NetworkAccess);
         }
-
+       
         async static void CheckConnection(NetworkAccess access)
         {
             try
