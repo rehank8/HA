@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "766801312848",
+    "firebase_url": "https://lwsc-7cfc4.firebaseio.com",
+    "project_id": "lwsc-7cfc4",
+    "storage_bucket": "lwsc-7cfc4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:766801312848:android:161c564c027a676dd1a555",
+        "android_client_info": {
+          "package_name": "com.deccansoft.LWSC"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "766801312848-jt2ocg24bhseh1v7m6b6fva2412v5fn9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.deccansoft.LWSC",
+            "certificate_hash": "15e1e481f4e0d619e56b173ac3a6ad6421028585"
+          }
+        },
+        {
+          "client_id": "766801312848-up4od5jb4pnd69gsahvh0loe379du2jf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.deccansoft.LWSC",
+            "certificate_hash": "f5926d667b84f8d13735621d6918d1811fc2b798"
+          }
+        },
+        {
+          "client_id": "766801312848-11t5qdj2nfhreatk6tlv187745ueig2v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_xK6VPUlxHvZn_UHNCTdYLojZhXo0gl4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "766801312848-11t5qdj2nfhreatk6tlv187745ueig2v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -6,107 +6,112 @@
              mc:Ignorable="d"
              x:Class="HA.Views.VendorListCount"
 			 Title="Vendors">
-    <ContentPage.Content>
-        <AbsoluteLayout>
-            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
-                <Label Margin="10" FontSize="Large">
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="{Binding CategoryName}"></Span>
-                            <Span Text="{Binding VendorsCount}"></Span>
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
-                <ListView x:Name="lst" ItemsSource="{Binding Vendors}" Margin="10" HasUnevenRows="True" SelectedItem="{Binding Vendor}">
-                    <ListView.Behaviors>
-                        <behavior:EventToCommandBehavior EventName="ItemSelected" Command="{Binding BookNowCommand}" CommandParameter="{Binding Vendor}"></behavior:EventToCommandBehavior>
-                    </ListView.Behaviors>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <!--<Frame Padding="5,15,5,15" CornerRadius="6" Margin="5" HeightRequest="200" BorderColor="LightGray">-->
-                                <Grid x:Name="gd" RowSpacing="5" ColumnSpacing="5" Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                        <ColumnDefinition Width="2*"></ColumnDefinition>
-                                        <ColumnDefinition Width="1.5*"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <Image Source="{Binding PhotoUrl}" HeightRequest="40" VerticalOptions="CenterAndExpand"></Image>
-                                    <StackLayout Grid.Column="1" HorizontalOptions="Start">
-                                        <Label Text="{Binding ListingName}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"></Label>
-                                        <Label HorizontalTextAlignment="Start" VerticalTextAlignment="Center">
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="Insurance: " FontAttributes="Bold"></Span>
-                                                    <Span Text="{Binding Insurance}"></Span>
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
-                                    </StackLayout>
-                                    <Button Text="BookNow" Grid.Column="2" BackgroundColor="#03a9f4" BindingContext="{Binding Source={x:Reference lst},Path=BindingContext}" Command="{Binding BookNowCommand}" CommandParameter="{Binding Source={x:Reference gd},Path=BindingContext}" FontSize="Small" VerticalOptions="CenterAndExpand" HorizontalOptions="End"></Button>
-                                </Grid>
-                                <!--</Frame>-->
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackLayout>
-            <ContentView x:Name="popupForm" IsVisible="{Binding IsSubmitFormVisible}" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent" AbsoluteLayout.LayoutBounds="0, 0, 1, .9" AbsoluteLayout.LayoutFlags="All">
-                <Frame Padding="0" Margin="20" BorderColor="Gray" HasShadow="False" CornerRadius="10" WidthRequest="400" BackgroundColor="#f7f7f7" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-                    <StackLayout VerticalOptions="CenterAndExpand">
+	<ContentPage.Content>
+		<AbsoluteLayout>
+			<StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+				<SearchBar Placeholder="Search by vendor" Text="{Binding VendorSearch}" PlaceholderColor="LightGray" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+					<SearchBar.Behaviors>
+						<behavior:EventToCommandBehavior EventName="TextChanged" Command="{Binding SearchVendorCommand}" CommandParameter="{Binding VendorSearch}"></behavior:EventToCommandBehavior>
+					</SearchBar.Behaviors>
+				</SearchBar>
+				<Label Margin="10" FontSize="Large">
+					<Label.FormattedText>
+						<FormattedString>
+							<Span Text="{Binding CategoryName}"></Span>
+							<Span Text="{Binding VendorsCount}"></Span>
+						</FormattedString>
+					</Label.FormattedText>
+				</Label>
+				<ListView x:Name="lst" ItemsSource="{Binding Vendors}" Margin="10" HasUnevenRows="True" SelectedItem="{Binding Vendor}" IsVisible="{Binding Vendors,Converter={StaticResource IsEmptyListConverter}}">
+					<ListView.Behaviors>
+						<behavior:EventToCommandBehavior EventName="ItemSelected" Command="{Binding BookNowCommand}" CommandParameter="{Binding Vendor}"></behavior:EventToCommandBehavior>
+					</ListView.Behaviors>
+					<ListView.ItemTemplate>
+						<DataTemplate>
+							<ViewCell>
+								<!--<Frame Padding="5,15,5,15" CornerRadius="6" Margin="5" HeightRequest="200" BorderColor="LightGray">-->
+								<Grid x:Name="gd" RowSpacing="5" ColumnSpacing="5" Margin="5">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="*"></ColumnDefinition>
+										<ColumnDefinition Width="2*"></ColumnDefinition>
+										<ColumnDefinition Width="1.5*"></ColumnDefinition>
+									</Grid.ColumnDefinitions>
+									<Image Source="{Binding PhotoUrl}" HeightRequest="40" VerticalOptions="CenterAndExpand"></Image>
+									<StackLayout Grid.Column="1" HorizontalOptions="Start">
+										<Label Text="{Binding ListingName}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"></Label>
+										<Label HorizontalTextAlignment="Start" VerticalTextAlignment="Center">
+											<Label.FormattedText>
+												<FormattedString>
+													<Span Text="Insurance: " FontAttributes="Bold"></Span>
+													<Span Text="{Binding Insurance}"></Span>
+												</FormattedString>
+											</Label.FormattedText>
+										</Label>
+									</StackLayout>
+									<Button Text="BookNow" Grid.Column="2" BackgroundColor="#03a9f4" BindingContext="{Binding Source={x:Reference lst},Path=BindingContext}" Command="{Binding BookNowCommand}" CommandParameter="{Binding Source={x:Reference gd},Path=BindingContext}" FontSize="Small" VerticalOptions="CenterAndExpand" HorizontalOptions="End"></Button>
+								</Grid>
+								<!--</Frame>-->
+							</ViewCell>
+						</DataTemplate>
+					</ListView.ItemTemplate>
+				</ListView>
+			</StackLayout>
+			<ContentView x:Name="popupForm" IsVisible="{Binding IsSubmitFormVisible}" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent" AbsoluteLayout.LayoutBounds="0, 0, 1, .9" AbsoluteLayout.LayoutFlags="All">
+				<Frame Padding="0" Margin="20" BorderColor="Gray" HasShadow="False" CornerRadius="10" WidthRequest="400" BackgroundColor="#f7f7f7" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+					<StackLayout VerticalOptions="CenterAndExpand">
 						<StackLayout BackgroundColor="#03a9f4" Padding="0" Margin="0" Orientation="Horizontal">
-                            <Label Text="Book Now" VerticalTextAlignment="Center"  TextColor="White"  FontSize="Large" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" Margin="10" ></Label>
-                            <Label HorizontalOptions="End" HeightRequest="45" VerticalOptions="CenterAndExpand" Margin="0,0,5,0" Text="Close" FontSize="Medium">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding ClosePopUpCommand}"></TapGestureRecognizer>
-                                </Label.GestureRecognizers>
-                            </Label>
-                        </StackLayout>
-                        <StackLayout Spacing="10" Padding="15,5,15,15">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
-                                <Entry Text="{Binding Firstname}" Placeholder="Firstname" HorizontalOptions="FillAndExpand"></Entry>
-                                <Entry Text="{Binding Lastname}" Grid.Column="1" Placeholder="Lastname" HorizontalOptions="FillAndExpand"></Entry>
-                            </Grid>
-                            <Entry Text="{Binding Email}" Placeholder="Email" HorizontalOptions="FillAndExpand"></Entry>
-                            <Entry Text="{Binding Phone}" Keyboard="Numeric" MaxLength="10" Placeholder="Phone" HorizontalOptions="FillAndExpand"></Entry>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                    <ColumnDefinition Width="2*"></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
-                                <Entry Text="{Binding SelectedDate,StringFormat='{0:MMMM dd, yyyy}'}" Placeholder="Select Date" HorizontalOptions="FillAndExpand"></Entry>
-                                <Image Source="calendar.png" HeightRequest="30" Grid.Column="1">
-                                    <Image.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding ImageCommand}"></TapGestureRecognizer>
-                                    </Image.GestureRecognizers>
-                                </Image>
-                                <!--<DatePicker MinimumDate="{Binding MinimumDate}" Date="{Binding SelectedDate}" HorizontalOptions="FillAndExpand"></DatePicker>-->
-                                <Picker ItemsSource="{Binding VendorsdateTime}" IsEnabled="{Binding IsTime}" SelectedItem="{Binding SelectedTime}" Title="Select Time" ItemDisplayBinding="{Binding .}" Grid.Column="2" HorizontalOptions="FillAndExpand">
-                                    <Picker.Behaviors>
-                                        <behavior:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding SelectedTimeCommand}" CommandParameter="{Binding SelectedTime}"></behavior:EventToCommandBehavior>
-                                    </Picker.Behaviors>
-                                </Picker>
-                            </Grid>
-                            <!--<DatePicker HorizontalOptions="FillAndExpand"></DatePicker>
+							<Label Text="Book Now" VerticalTextAlignment="Center"  TextColor="White"  FontSize="Large" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" Margin="10" ></Label>
+							<Label HorizontalOptions="End" HeightRequest="45" VerticalOptions="CenterAndExpand" Margin="0,0,5,0" Text="Close" FontSize="Medium">
+								<Label.GestureRecognizers>
+									<TapGestureRecognizer Command="{Binding ClosePopUpCommand}"></TapGestureRecognizer>
+								</Label.GestureRecognizers>
+							</Label>
+						</StackLayout>
+						<StackLayout Spacing="10" Padding="15,5,15,15">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*"></ColumnDefinition>
+								</Grid.ColumnDefinitions>
+								<Entry Text="{Binding Firstname}" Placeholder="Firstname" HorizontalOptions="FillAndExpand"></Entry>
+								<Entry Text="{Binding Lastname}" Grid.Column="1" Placeholder="Lastname" HorizontalOptions="FillAndExpand"></Entry>
+							</Grid>
+							<Entry Text="{Binding Email}" Placeholder="Email" HorizontalOptions="FillAndExpand"></Entry>
+							<Entry Text="{Binding Phone}" Keyboard="Numeric" MaxLength="10" Placeholder="Phone" HorizontalOptions="FillAndExpand"></Entry>
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="2*"></ColumnDefinition>
+									<ColumnDefinition Width="*"></ColumnDefinition>
+									<ColumnDefinition Width="2*"></ColumnDefinition>
+								</Grid.ColumnDefinitions>
+								<Entry Text="{Binding SelectedDate,StringFormat='{0:MMMM dd, yyyy}'}" Placeholder="Select Date" HorizontalOptions="FillAndExpand"></Entry>
+								<Image Source="calendar.png" HeightRequest="30" Grid.Column="1">
+									<Image.GestureRecognizers>
+										<TapGestureRecognizer Command="{Binding ImageCommand}"></TapGestureRecognizer>
+									</Image.GestureRecognizers>
+								</Image>
+								<!--<DatePicker MinimumDate="{Binding MinimumDate}" Date="{Binding SelectedDate}" HorizontalOptions="FillAndExpand"></DatePicker>-->
+								<Picker ItemsSource="{Binding VendorsdateTime}" IsEnabled="{Binding IsTime}" SelectedItem="{Binding SelectedTime}" Title="Select Time" ItemDisplayBinding="{Binding .}" Grid.Column="2" HorizontalOptions="FillAndExpand">
+									<Picker.Behaviors>
+										<behavior:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding SelectedTimeCommand}" CommandParameter="{Binding SelectedTime}"></behavior:EventToCommandBehavior>
+									</Picker.Behaviors>
+								</Picker>
+							</Grid>
+							<!--<DatePicker HorizontalOptions="FillAndExpand"></DatePicker>
                             <TimePicker HorizontalOptions="FillAndExpand"></TimePicker>-->
-                            <Frame BorderColor="LightGray" Padding="10,0,10,0" Margin="0">
-                                <Editor Text="{Binding Reason}" HeightRequest="100" HorizontalOptions="FillAndExpand" Placeholder="Visiting reason"></Editor>
-                            </Frame>
-                            <Entry Text="{Binding ReferralPhone}" HorizontalOptions="FillAndExpand" Placeholder="Referral phone# if you have one"></Entry>
-                            <StackLayout Orientation="Horizontal" Spacing="10">
-                                <Button Text="BookNow" BackgroundColor="#03a9f4" CornerRadius="6" Command="{Binding BookAppointmentCommand}"></Button>
-                                <Button Text="Clear" CornerRadius="6" Command="{Binding ClearCommand}"></Button>
-                            </StackLayout>
-                        </StackLayout>
-                    </StackLayout>
-                </Frame>
-            </ContentView>
-            <ContentView x:Name="IsCalender" IsVisible="{Binding IsCalender}" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent" AbsoluteLayout.LayoutBounds="0, 0, 1, .9" AbsoluteLayout.LayoutFlags="All">
-                <controls:Calendar AnimateCalendar="True"
+							<Frame BorderColor="LightGray" Padding="10,0,10,0" Margin="0">
+								<Editor Text="{Binding Reason}" HeightRequest="100" HorizontalOptions="FillAndExpand" Placeholder="Visiting reason"></Editor>
+							</Frame>
+							<Entry Text="{Binding ReferralPhone}" HorizontalOptions="FillAndExpand" Placeholder="Referral phone# if you have one"></Entry>
+							<StackLayout Orientation="Horizontal" Spacing="10">
+								<Button Text="BookNow" BackgroundColor="#03a9f4" CornerRadius="6" Command="{Binding BookAppointmentCommand}"></Button>
+								<Button Text="Clear" CornerRadius="6" Command="{Binding ClearCommand}"></Button>
+							</StackLayout>
+						</StackLayout>
+					</StackLayout>
+				</Frame>
+			</ContentView>
+			<ContentView x:Name="IsCalender" IsVisible="{Binding IsCalender}" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent" AbsoluteLayout.LayoutBounds="0, 0, 1, .9" AbsoluteLayout.LayoutFlags="All">
+				<controls:Calendar AnimateCalendar="True"
                                    Margin="50"
                                    BackgroundColor="LightGray"
             MonthLabelColor="Red"
@@ -123,10 +128,13 @@ TodayOutlineColor="Blue"
 TodayFillColor="Silver"
                                    SelectedDate="{Binding SelectedDate}"
             DayTappedCommand="{Binding DayCommand}">
-                   
-                </controls:Calendar>
-            </ContentView>
-            <ActivityIndicator IsVisible="{Binding IsBusy}" Color="#11A2CD" IsRunning="True" AbsoluteLayout.LayoutFlags="All"  AbsoluteLayout.LayoutBounds="0.5,0.5,.1,.1"></ActivityIndicator>
-        </AbsoluteLayout>
-    </ContentPage.Content>
+
+				</controls:Calendar>
+			</ContentView>
+			<StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" IsVisible="{Binding Vendors, Converter={StaticResource IsEmptyListConverter}, ConverterParameter=true}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+				<Label Text="No Records" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="Large" TextColor="Black"></Label>
+			</StackLayout>
+			<ActivityIndicator IsVisible="{Binding IsBusy}" Color="#11A2CD" IsRunning="True" AbsoluteLayout.LayoutFlags="All"  AbsoluteLayout.LayoutBounds="0.5,0.5,.1,.1"></ActivityIndicator>
+		</AbsoluteLayout>
+	</ContentPage.Content>
 </ContentPage>

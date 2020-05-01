@@ -33,10 +33,11 @@ namespace HA.ViewModels
 		public ICommand ImageCommand => new Command(Image_clicked);
 		public ICommand DayCommand => new Command(Day_clicked);
 		public ICommand ClearCommand => new Command(Clear_clicked);
+		public ICommand SearchVendorCommand => new Command(Search_clicked);
 		//public ICommand SelectedTimeCommand => new Command(SelectedTime_clicked);
 		public event PropertyChangedEventHandler PropertyChanged;
 		private string _categoryName, _currentLocation;
-		string _vendorsCount, _firstname, _lastname, _email, _phone, _reason, _referralphone;
+		string _vendorsCount, _firstname, _lastname, _email, _phone, _reason, _referralphone, _VendorSearch;
 		bool _IsSubmitFormVisible, _isCalender, _isTime, _isBusy;
 		DateTime _minDate, _minimumDate;
 		string _selectedDate;
@@ -77,6 +78,11 @@ namespace HA.ViewModels
 				return _minDate;
 			}
 			set { _minDate = value; NotifyPropertyChanged(); }
+		}
+		public string VendorSearch
+		{
+			get { return _VendorSearch; }
+			set { _VendorSearch = value; NotifyPropertyChanged(nameof(VendorSearch)); }
 		}
 		public string SelectedDate
 		{
@@ -320,6 +326,31 @@ namespace HA.ViewModels
 			SelectedTime = string.Empty;
 			ReferralPhone = string.Empty;
 			Reason = string.Empty;
+		}
+		List<UserIndex> users = new List<UserIndex>();
+		private async void Search_clicked(object obj)
+		{
+			var keyword = obj as TextChangedEventArgs;
+			var e = VendorSearch;// keyword.NewTextValue;
+			if (!string.IsNullOrEmpty(e))
+			{
+				await Task.Run(() =>
+				{
+					users = accntService.GetVendors(CurrentLocation);
+				});
+
+				Vendors = users?.Where(x => x.ListingName.ToLower().Contains(e.ToLower())).ToList();
+				// name => name.ToLower().Contains(keyword.ToLower()));
+			}
+			else
+			{
+				await Task.Run(() =>
+				{
+					users = accntService.GetVendors(CurrentLocation);
+				});
+				Vendors=users;
+			}
+
 		}
 		protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
 		{

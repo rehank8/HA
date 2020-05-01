@@ -1,4 +1,5 @@
-﻿using HA.Model;
+﻿using HA.DependencyInjection;
+using HA.Model;
 using HA.Views;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
@@ -12,63 +13,70 @@ using Xamarin.Forms.Xaml;
 
 namespace HA
 {
-    public partial class App : Application
-    {
-        LoginResponse login = Helper.UserProfileDBService.GetAuthUser();
-        UserProfile user = Helper.RoleIdDbService.GetAuthUser();
-        public App()
-        {
-            InitializeComponent();
-            Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
-            if (login != null)
-            {
-                if (user != null)
-                {
-                    if (user.FKRoleId == 2)
-                        MainPage = new NavigationPage(new VendorsList());
-                    else if (user.FKRoleId == 3)
-                        MainPage = new NavigationPage(new HomePage());
-                }
-                else
-                    MainPage = new NavigationPage(new HomePage());
-            }
-            else
-                MainPage = new NavigationPage(new HomePage());
-        }
-        void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
-        {
-            CheckConnection(e.NetworkAccess);
-        }
-       
-        async static void CheckConnection(NetworkAccess access)
-        {
-            try
-            {
-                if (access != NetworkAccess.Internet)
-                {
-                    await Task.Yield();
-                    await Application.Current.MainPage.DisplayAlert("", "No Internet!", "Ok");
-                    CrossToastPopUp.Current.ShowToastError("Offline");
-                }
-                else
-                {
-                    CrossToastPopUp.Current.ShowToastSuccess("Back online");
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-        }
-        protected override void OnStart()
-        {
-        }
+	public partial class App : Application
+	{
+		LoginResponse login = Helper.UserProfileDBService.GetAuthUser();
+		UserProfile user = Helper.RoleIdDbService.GetAuthUser();
+		public App()
+		{
+			InitializeComponent();
+			Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
+			if (user != null)
+			{
+				if (user.FKRoleId == 2)
+				{
+					MainPage = new NavigationPage(new VendorsList());
+				}
+				else if (user.FKRoleId == 3)
+				{
+					MainPage = new NavigationPage(new HomePage());
+				}
+			}
+			else
+				MainPage = new NavigationPage(new HomePage());
+		}
+		void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+		{
+			CheckConnection(e.NetworkAccess);
+		}
 
-        protected override void OnSleep()
-        {
-        }
+		async static void CheckConnection(NetworkAccess access)
+		{
+			try
+			{
+				if (access != NetworkAccess.Internet)
+				{
+					await Task.Yield();
+					await Application.Current.MainPage.DisplayAlert("", "No Internet!", "Ok");
+					CrossToastPopUp.Current.ShowToastError("Offline");
+				}
+				else
+				{
+					CrossToastPopUp.Current.ShowToastSuccess("Back online");
+				}
+			}
+			catch (Exception ex)
+			{
+			}
+		}
+		public bool IsgpsEnabled()
+		{
+			return DependencyService.Get<ICheckPermission>().IsgpsEnabled();
+		}
+		public bool CheckForPermission()
+		{
+			return DependencyService.Get<ICheckPermission>().IsLocationGrantedForApplication();
+		}
+		protected override void OnStart()
+		{
+		}
 
-        protected override void OnResume()
-        {
-        }
-    }
+		protected override void OnSleep()
+		{
+		}
+
+		protected override void OnResume()
+		{
+		}
+	}
 }

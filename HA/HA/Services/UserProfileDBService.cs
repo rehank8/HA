@@ -18,10 +18,10 @@ namespace HA.Services
 
         public LoginResponse GetAuthUser()
         {
-            var data = db.Table<LoginResponse>().FirstOrDefault();
-            if (data != null)
-                Helper.LoginResponse = data;
-            return data;
+            return db.Table<LoginResponse>().FirstOrDefault();
+            //if (data != null)
+            //    Helper.LoginResponse = data;
+            //return data;
         }
 
         public void Save(LoginResponse model)
@@ -33,7 +33,9 @@ namespace HA.Services
 
         public void Delete()
         {
-            db.Execute("Delete from LoginResponse");
+            _ = db.Execute("Delete from LoginResponse");
+            Helper.LoginResponse = null;
+            //db.Execute("Delete from LoginResponse");
         }
     }
 }

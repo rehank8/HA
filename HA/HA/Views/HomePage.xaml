@@ -51,7 +51,7 @@
                 </Frame>
                 <StackLayout>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Margin="0,0,10,0">
-                        <SearchBar HorizontalOptions="FillAndExpand" Text="{Binding CurrentLocation}">
+                        <SearchBar HorizontalOptions="FillAndExpand" Text="{Binding CurrentLocation}" Placeholder="Search for your location" PlaceholderColor="LightGray">
                             <SearchBar.Behaviors>
                                 <behavior:EventToCommandBehavior EventName="SearchButtonPressed" Command="{Binding SearchVendorCommand}"></behavior:EventToCommandBehavior>
                                 <behavior:EventToCommandBehavior EventName="TextChanged" Command="{Binding EmptySearchCommand}"></behavior:EventToCommandBehavior>

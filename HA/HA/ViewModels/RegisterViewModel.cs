@@ -1,4 +1,5 @@
 ﻿using Android.Webkit;
+using HA.DependencyInjection;
 using HA.Model;
 using HA.Services;
 using HA.Views;
@@ -31,6 +32,7 @@ namespace HA.ViewModels
 			GetLocation();
 			//GetVendorsByLocation();
 		}
+
 		public ICommand GoToMyRecentCommand => new Command(GotoMyRecent_clicked);
 		public ICommand RegistrationCommand => new Command(Registration_clicked);
 		public ICommand GoToLoginCommand => new Command(GoToLogon_clicked);
@@ -213,6 +215,14 @@ namespace HA.ViewModels
 				IsPassword = false;
 			return isValid;
 		}
+		public bool IsgpsEnabled()
+		{
+			return DependencyService.Get<ICheckPermission>().IsgpsEnabled();
+		}
+		public bool CheckForPermission()
+		{
+			return DependencyService.Get<ICheckPermission>().IsLocationGrantedForApplication();
+		}
 
 		private void Registration_clicked()
 		{
@@ -298,30 +308,74 @@ namespace HA.ViewModels
 
 		private async void GetLocation()
 		{
+			//Position position = null;
 			try
 			{
-				if (await RequestForPermission())
+				bool IsPermissionCheck = await RequestForPermission();
+				if (IsPermissionCheck)
 				{
-					IsBusy = true;
-					var locator = CrossGeolocator.Current;
-					locator.DesiredAccuracy = 100;
-					var position = await locator.GetLastKnownLocationAsync();
-					position = await locator.GetPositionAsync(TimeSpan.FromMilliseconds(100), null, true);
-					var addresses = await locator.GetAddressesForPositionAsync(position, null);
-					var address = addresses.FirstOrDefault();
-					if (address != null)
+					bool isLocEnabled = IsgpsEnabled();
+					if (!isLocEnabled)
 					{
-						CurrentLocation = address.Locality;
+						await Task.Run(() =>
+						{
+							Vendors = accntService.GetVendorslist();
+						});
+						await Application.Current.MainPage.DisplayAlert("Gps is not enabled", "Please turn on the Gps to accesss location", "Ok");
 					}
-					GetVendorsByLocation();
+					else
+					{
+						IsBusy = true;
+						var locator = CrossGeolocator.Current;
+						locator.DesiredAccuracy = 100;
+						//position = await locator.GetLastKnownLocationAsync();
+						var checkpermission = CheckForPermission();
+						if (!checkpermission)
+						{
+							await Task.Run(() =>
+							{
+								Vendors = accntService.GetVendorslist();
+							});
+							await Application.Current.MainPage.DisplayAlert("Alert", "Permission is not granted please give permission for location", "Ok");
+						}
+						else
+						{
+							var request = new GeolocationRequest(GeolocationAccuracy.Best);
+							var position = await Geolocation.GetLocationAsync(request);
+							//await locator.GetLastKnownLocationAsync();//await locator.GetPositionAsync(TimeSpan.FromMilliseconds(100), null, true);
+							if (position != null)
+							{
+								var addresses = await Geocoding.GetPlacemarksAsync(position.Latitude, position.Longitude);//await locator.GetAddressesForPositionAsync(position, null);
+								var address = addresses?.FirstOrDefault();
+								if (address != null)
+								{
+									CurrentLocation = address.Locality;
+
+								}
+								if (!string.IsNullOrEmpty(CurrentLocation))
+								{
+									GetVendorsByLocation();
+								}
+							}
+							else
+							{
+								await Task.Run(() =>
+								{
+									Vendors = accntService.GetVendorslist();
+								});
+								await Application.Current.MainPage.DisplayAlert("Alert", "Error in fetching location", "Ok");
+							}
+						}
+
+					}
 				}
 				else
 				{
-					await Task.Run(() => 
+					await Task.Run(() =>
 					{
 						Vendors = accntService.GetVendorslist();
 					});
-					await Application.Current.MainPage.DisplayAlert("Alert", "Please enable the GPS", "Ok");
+					await Application.Current.MainPage.DisplayAlert("Alert", "Permission is not granted", "Ok");
 				}
 			}
 			catch (FeatureNotSupportedException fnsEx)
@@ -430,12 +484,7 @@ namespace HA.ViewModels
 			{
 				if (user != null)
 				{
-					if (user.FKRoleId == 2)
-					{
-						IsLogin = true;
-						IsLogout = false;
-					}
-					else if (user.FKRoleId == 3)
+					if (user.FKRoleId == 3)
 					{
 						IsLogin = false;
 						IsLogout = true;
@@ -459,6 +508,7 @@ namespace HA.ViewModels
 			if (isLogoutornot)
 			{
 				Helper.UserProfileDBService.Delete();
+				Helper.UserProfile = null;
 				Helper.LoginResponse = null;
 				Application.Current.MainPage = new NavigationPage(new HomePage());
 			}

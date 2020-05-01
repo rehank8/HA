@@ -14,7 +14,7 @@
     <ContentPage.Content>
         <StackLayout>
          
-            <StackLayout>
+            <StackLayout Padding="0,0,20,0">
                 <controls:Calendar AnimateCalendar="True"
                               
             MonthLabelColor="Red"
@@ -34,7 +34,7 @@ TodayFillColor="Silver"
                     <controls:Calendar.EventTemplate>
                         <DataTemplate>
                             <StackLayout
-                Padding="15,0,0,0">
+                Padding="15,0,20,0">
                                 <Label
                     Text="{Binding .}"
                     FontAttributes="Bold"
