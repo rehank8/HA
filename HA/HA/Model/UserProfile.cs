@@ -7,6 +7,7 @@ namespace HA.Model
    public class UserProfile
     {
         public int FKRoleId { get; set; }
+        public string Firstname { get; set; }
         public string usertype { get; set; }
         public string emailid { get; set; }
         public string password { get; set; }

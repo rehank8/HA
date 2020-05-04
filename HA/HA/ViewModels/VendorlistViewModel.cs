@@ -336,7 +336,7 @@ namespace HA.ViewModels
 			{
 				await Task.Run(() =>
 				{
-					users = accntService.GetVendors(CurrentLocation);
+					users = accntService.GetVendors(CurrentLocation).Where(x=>x.CategoryName==CategoryName).ToList();
 				});
 
 				Vendors = users?.Where(x => x.ListingName.ToLower().Contains(e.ToLower())).ToList();
@@ -346,7 +346,7 @@ namespace HA.ViewModels
 			{
 				await Task.Run(() =>
 				{
-					users = accntService.GetVendors(CurrentLocation);
+					users = accntService.GetVendors(CurrentLocation).Where(x => x.CategoryName == CategoryName).ToList();
 				});
 				Vendors=users;
 			}

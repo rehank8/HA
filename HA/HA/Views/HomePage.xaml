@@ -6,147 +6,162 @@
              mc:Ignorable="d"
              x:Class="HA.Views.HomePage"
              NavigationPage.HasNavigationBar="False">
-    <ContentPage.Content>
-        <AbsoluteLayout>
-            <StackLayout Padding="0"  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
-                <Frame Padding="0" CornerRadius="0" Margin="0" VerticalOptions="Start" HeightRequest="50" BackgroundColor="#03a9f4">
-                    <StackLayout Padding="0,8,0,0" Spacing="0" VerticalOptions="CenterAndExpand">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <StackLayout Padding="10,0,0,0" Spacing="0" HorizontalOptions="Start" VerticalOptions="CenterAndExpand">
-                                <Label Text="My Recent Appointments" VerticalTextAlignment="Center" TextColor="White" FontSize="Default" IsVisible="{Binding IsLogout}">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding GoToMyRecentCommand}"></TapGestureRecognizer>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                            </StackLayout>
-                            <StackLayout Grid.Column="1" Orientation="Horizontal" HorizontalOptions="End" VerticalOptions="CenterAndExpand" Margin="0,0,10,0">
-                                <Label Text="LOGIN" IsVisible="{Binding IsLogin}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding GoToLoginCommand}"></TapGestureRecognizer>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="REGISTER" IsVisible="{Binding IsLogin}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding RegistrationCommand}"></TapGestureRecognizer>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="HELLO USER!" IsVisible="{Binding IsLogout}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding RegistrationCommand}"></TapGestureRecognizer>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="LOGOUT" IsVisible="{Binding IsLogout}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding LogoutCommand}"></TapGestureRecognizer>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                            </StackLayout>
-                            <!--</StackLayout>-->
-                        </Grid>
-                    </StackLayout>
-                    
-                </Frame>
-                <StackLayout>
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Margin="0,0,10,0">
-                        <SearchBar HorizontalOptions="FillAndExpand" Text="{Binding CurrentLocation}" Placeholder="Search for your location" PlaceholderColor="LightGray">
-                            <SearchBar.Behaviors>
-                                <behavior:EventToCommandBehavior EventName="SearchButtonPressed" Command="{Binding SearchVendorCommand}"></behavior:EventToCommandBehavior>
-                                <behavior:EventToCommandBehavior EventName="TextChanged" Command="{Binding EmptySearchCommand}"></behavior:EventToCommandBehavior>
-                            </SearchBar.Behaviors>
-                        </SearchBar>
-                        <Button Text="Search" CornerRadius="6" Margin="0,0,0,5" Command="{Binding SearchVendorCommand}"></Button>
-                    </StackLayout>
-                    <CollectionView x:Name="lstNew" SelectionMode="Single" Margin="10" ItemsSource="{Binding Vendors}" IsVisible="{Binding Vendors,Converter={StaticResource IsEmptyListConverter}}">
-                        <CollectionView.Behaviors>
-                            <behavior:EventToCommandBehavior EventName="SelectionChanged" Command="{Binding ListSelectedCommand}" CommandParameter="{Binding CategoryName}"></behavior:EventToCommandBehavior>
-                        </CollectionView.Behaviors>
-                        <CollectionView.ItemsLayout>
-                            <GridItemsLayout Orientation="Vertical" HorizontalItemSpacing="5" VerticalItemSpacing="5"
+	<ContentPage.Content>
+		<AbsoluteLayout>
+			<StackLayout Padding="0"  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+				<Frame Padding="0" CornerRadius="0" Margin="0" VerticalOptions="Start" HeightRequest="50" BackgroundColor="#03a9f4">
+					<StackLayout Padding="0,8,0,0" Spacing="0" VerticalOptions="CenterAndExpand">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"></ColumnDefinition>
+							</Grid.ColumnDefinitions>
+							<StackLayout Padding="10,0,0,0" Spacing="0" HorizontalOptions="Start" VerticalOptions="CenterAndExpand">
+								<Label Text="My Recent Appointments" VerticalTextAlignment="Center" TextColor="White" FontSize="Default" IsVisible="{Binding IsLogout}">
+									<Label.GestureRecognizers>
+										<TapGestureRecognizer Command="{Binding GoToMyRecentCommand}"></TapGestureRecognizer>
+									</Label.GestureRecognizers>
+								</Label>
+							</StackLayout>
+							<StackLayout Grid.Column="1" Orientation="Horizontal" HorizontalOptions="End" VerticalOptions="CenterAndExpand" Margin="0,0,10,0">
+								<Label Text="LOGIN" IsVisible="{Binding IsLogin}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
+									<Label.GestureRecognizers>
+										<TapGestureRecognizer Command="{Binding GoToLoginCommand}"></TapGestureRecognizer>
+									</Label.GestureRecognizers>
+								</Label>
+								<Label Text="REGISTER" IsVisible="{Binding IsLogin}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
+									<Label.GestureRecognizers>
+										<TapGestureRecognizer Command="{Binding RegistrationCommand}"></TapGestureRecognizer>
+									</Label.GestureRecognizers>
+								</Label>
+								<Label Text="HELLO USER!" IsVisible="{Binding IsLogout}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
+									<Label.GestureRecognizers>
+										<TapGestureRecognizer Command="{Binding RegistrationCommand}"></TapGestureRecognizer>
+									</Label.GestureRecognizers>
+								</Label>
+								<Label Text="LOGOUT" IsVisible="{Binding IsLogout}" FontSize="Default" TextColor="White" Margin="0,0,10,0">
+									<Label.GestureRecognizers>
+										<TapGestureRecognizer Command="{Binding LogoutCommand}"></TapGestureRecognizer>
+									</Label.GestureRecognizers>
+								</Label>
+							</StackLayout>
+							<!--</StackLayout>-->
+						</Grid>
+					</StackLayout>
+
+				</Frame>
+				<StackLayout>
+					<StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Margin="0,0,10,0">
+						<SearchBar HorizontalOptions="FillAndExpand" Text="{Binding CurrentLocation}" Placeholder="Search with location" PlaceholderColor="gray">
+							<SearchBar.Behaviors>
+								<behavior:EventToCommandBehavior EventName="SearchButtonPressed" Command="{Binding SearchVendorCommand}"></behavior:EventToCommandBehavior>
+								<behavior:EventToCommandBehavior EventName="TextChanged" Command="{Binding EmptySearchCommand}"></behavior:EventToCommandBehavior>
+							</SearchBar.Behaviors>
+						</SearchBar>
+						<Button Text="Search" CornerRadius="6" Margin="0,0,0,5" Command="{Binding SearchVendorCommand}"></Button>
+					</StackLayout>
+					<CollectionView x:Name="lstNew" SelectionMode="Single" Margin="10" ItemsSource="{Binding Vendors}" IsVisible="{Binding Vendors,Converter={StaticResource IsEmptyListConverter}}">
+						<CollectionView.Behaviors>
+							<behavior:EventToCommandBehavior EventName="SelectionChanged" Command="{Binding ListSelectedCommand}" CommandParameter="{Binding CategoryName}"></behavior:EventToCommandBehavior>
+						</CollectionView.Behaviors>
+						<CollectionView.ItemsLayout>
+							<GridItemsLayout Orientation="Vertical" HorizontalItemSpacing="5" VerticalItemSpacing="5"
                         Span="2" />
-                        </CollectionView.ItemsLayout>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Frame x:Name="frm" Padding="5" CornerRadius="6" Margin="5" BorderColor="LightGray">
-                                    <StackLayout>
-                                        <Image Source="{Binding PhotoUrl}" HeightRequest="60" VerticalOptions="CenterAndExpand">
-                                        </Image>
-                                        <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center">
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="{Binding CategoryName}"></Span>
-                                                    <Span Text="{Binding VendorsCount}"></Span>
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
-                                        <StackLayout.GestureRecognizers>
-                                            <TapGestureRecognizer  BindingContext="{Binding Source={x:Reference lstNew},Path=BindingContext}" Command="{Binding ListSelectedCommand}" CommandParameter="{Binding Source={x:Reference frm},Path=BindingContext}"></TapGestureRecognizer>
-                                        </StackLayout.GestureRecognizers>
-                                    </StackLayout>
-                                </Frame>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </StackLayout>
+						</CollectionView.ItemsLayout>
+						<CollectionView.ItemTemplate>
+							<DataTemplate>
+								<Frame x:Name="frm" Padding="5" CornerRadius="6" Margin="5" BorderColor="LightGray">
+									<StackLayout>
+										<Image Source="{Binding PhotoUrl}" HeightRequest="60" VerticalOptions="CenterAndExpand">
+										</Image>
+										<Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center">
+											<Label.FormattedText>
+												<FormattedString>
+													<Span Text="{Binding CategoryName}"></Span>
+													<Span Text="{Binding VendorsCount}"></Span>
+												</FormattedString>
+											</Label.FormattedText>
+										</Label>
+										<StackLayout.GestureRecognizers>
+											<TapGestureRecognizer  BindingContext="{Binding Source={x:Reference lstNew},Path=BindingContext}" Command="{Binding ListSelectedCommand}" CommandParameter="{Binding Source={x:Reference frm},Path=BindingContext}"></TapGestureRecognizer>
+										</StackLayout.GestureRecognizers>
+									</StackLayout>
+								</Frame>
+							</DataTemplate>
+						</CollectionView.ItemTemplate>
+					</CollectionView>
+				</StackLayout>
 
-            </StackLayout>
-            <ContentView x:Name="popupReg" IsVisible="{Binding IsRegisterVisible}" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent" AbsoluteLayout.LayoutBounds="0, 0, 1, .9" AbsoluteLayout.LayoutFlags="All">
-                <Frame Padding="10" Margin="20" CornerRadius="10" WidthRequest="400" BackgroundColor="#f7f7f7" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-                    <StackLayout Margin="0,8,0,8" VerticalOptions="CenterAndExpand">
-                        <Label Text="Account" HorizontalOptions="Start" ></Label>
-                        <Picker HorizontalOptions="FillAndExpand" Title="Select Accounty Type" SelectedItem="{Binding UserType}">
-                            <Picker.Items>
-                                <x:String>User</x:String>
-                                <x:String>Vendor</x:String>
-                            </Picker.Items>
-                        </Picker>
-                        <Label Text="Please select AccountType" IsVisible="{Binding IsUserType}" TextColor="Red" FontSize="Micro"></Label>
-                        <Label Text="Email Id" HorizontalOptions="Start"></Label>
-                        <Entry HorizontalOptions="FillAndExpand" Text="{Binding Email}"></Entry>
-                        <Label Text="Please enter email id" IsVisible="{Binding IsEmail}" TextColor="Red" FontSize="Micro"></Label>
-                        <Label Text="Password" HorizontalOptions="Start"></Label>
-                        <Entry HorizontalOptions="FillAndExpand" IsPassword="True" Text="{Binding Password}"></Entry>
-                        <Label Text="Please enter password" IsVisible="{Binding IsPassword}" TextColor="Red" FontSize="Micro"></Label>
-                        <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                            <Button Text="Register" BackgroundColor="#03a9f4" Command="{Binding RegisterCommand}"></Button>
-                            <Button Text="Close" BackgroundColor="Red" Command="{Binding CloseRegCommand}"></Button>
-                        </StackLayout>
-                    </StackLayout>
-                </Frame>
-            </ContentView>
-            <ContentView x:Name="popupLogin" IsVisible="{Binding IsLoginVisible}" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent" AbsoluteLayout.LayoutBounds="0, 0, 1, .9" AbsoluteLayout.LayoutFlags="All">
-                <Frame Padding="10" Margin="20" CornerRadius="10" WidthRequest="400" BackgroundColor="#f7f7f7" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-                    <StackLayout Margin="0,8,0,8" VerticalOptions="CenterAndExpand">
-                        <Label Text="Email Id" HorizontalOptions="Start"></Label>
-                        <Entry HorizontalOptions="FillAndExpand" Text="{Binding Email}"></Entry>
-                        <Label Text="Please enter email id" IsVisible="{Binding IsEmail}" TextColor="Red" FontSize="Micro"></Label>
-                        <Label Text="Password" HorizontalOptions="Start"></Label>
-                        <Entry HorizontalOptions="FillAndExpand" Text="{Binding Password}" IsPassword="True"></Entry>
-                        <Label Text="Please enter password" IsVisible="{Binding IsPassword}" TextColor="Red" FontSize="Micro"></Label>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                                <CheckBox></CheckBox>
-                                <Label Text="Remember me" VerticalTextAlignment="Center"></Label>
-                            </StackLayout>
-                            <Label Text="Forgot Password?" TextColor="#03a9f4" HorizontalOptions="End" Grid.Row="0" Grid.Column="1"></Label>
-                        </Grid>
+			</StackLayout>
+			<ContentView x:Name="popupReg" IsVisible="{Binding IsRegisterVisible}" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent" AbsoluteLayout.LayoutBounds="0, 0, 1, .9" AbsoluteLayout.LayoutFlags="All">
+				<Frame Padding="0" Margin="20" CornerRadius="10" WidthRequest="400" BackgroundColor="White" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+					<StackLayout Padding="0">
+						<StackLayout BackgroundColor="#03a9f4" Padding="0" Margin="0" Orientation="Horizontal">
+							<Label Text="Register" VerticalTextAlignment="Center"  TextColor="White"  FontSize="Large" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" Margin="10" ></Label>
+						</StackLayout>
+					<StackLayout Padding="10" VerticalOptions="CenterAndExpand">
+						<Label Text="Account" HorizontalOptions="Start" ></Label>
+						<Picker HorizontalOptions="FillAndExpand" Title="Select Accounty Type" SelectedItem="{Binding UserType}">
+							<Picker.Items>
+								<x:String>User</x:String>
+								<x:String>Vendor</x:String>
+							</Picker.Items>
+						</Picker>
+						<Label Text="Please select AccountType" IsVisible="{Binding IsUserType}" TextColor="Red" FontSize="Micro"></Label>
+						<Label Text="Email Id" HorizontalOptions="Start"></Label>
+						<Entry HorizontalOptions="FillAndExpand" Text="{Binding Email}"></Entry>
+						<Label Text="Please enter email id" IsVisible="{Binding IsEmail}" TextColor="Red" FontSize="Micro"></Label>
+						<Label Text="Password" HorizontalOptions="Start"></Label>
+						<Entry HorizontalOptions="FillAndExpand" IsPassword="True" Text="{Binding Password}"></Entry>
+						<Label Text="Please enter password" IsVisible="{Binding IsPassword}" TextColor="Red" FontSize="Micro"></Label>
+						<StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+							<Button Text="Register" BackgroundColor="#03a9f4" Command="{Binding RegisterCommand}"></Button>
+							<Button Text="Close" BackgroundColor="Red" Command="{Binding CloseRegCommand}"></Button>
+						</StackLayout>
+					</StackLayout>
+					</StackLayout>
 
-                        <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                            <Button Text="Login" BackgroundColor="#03a9f4" Command="{Binding LoginCommand}"></Button>
-                            <Button Text="Close" BackgroundColor="Red" Command="{Binding LoginCloseCommand}"></Button>
-                        </StackLayout>
-                    </StackLayout>
-                </Frame>
-            </ContentView>
-            <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" IsVisible="{Binding Vendors, Converter={StaticResource IsEmptyListConverter}, ConverterParameter=true}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
-                <Label Text="No Records" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="Large" TextColor="Black"></Label>
-            </StackLayout>
-            <ActivityIndicator IsVisible="{Binding IsBusy}" Color="#11A2CD" IsRunning="True" AbsoluteLayout.LayoutFlags="All"  AbsoluteLayout.LayoutBounds="0.5,0.5,.1,.1"></ActivityIndicator>
-        </AbsoluteLayout>
-    </ContentPage.Content>
+				</Frame>
+			</ContentView>
+			<ContentView x:Name="popupLogin" IsVisible="{Binding IsLoginVisible}" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent" AbsoluteLayout.LayoutBounds="0, 0, 1, .9" AbsoluteLayout.LayoutFlags="All">
+				<Frame Padding="0" Margin="20" CornerRadius="10" WidthRequest="400" BackgroundColor="White" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+					<StackLayout Padding="0">
+						<StackLayout BackgroundColor="#03a9f4" Padding="0" Margin="0" Orientation="Horizontal">
+							<Label Text="Login" VerticalTextAlignment="Center"  TextColor="White"  FontSize="Large" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" Margin="10" ></Label>
+						</StackLayout>
+						<StackLayout Padding="10" VerticalOptions="CenterAndExpand">
+							<Label Text="Email Id" HorizontalOptions="Start"></Label>
+							<Entry HorizontalOptions="FillAndExpand" Text="{Binding Email}"></Entry>
+							<Label Text="Please enter email id" IsVisible="{Binding IsEmail}" TextColor="Red" FontSize="Micro"></Label>
+							<Label Text="Password" HorizontalOptions="Start"></Label>
+							<Entry HorizontalOptions="FillAndExpand" Text="{Binding Password}" IsPassword="True"></Entry>
+							<Label Text="Please enter password" IsVisible="{Binding IsPassword}" TextColor="Red" FontSize="Micro"></Label>
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*"></ColumnDefinition>
+								</Grid.ColumnDefinitions>
+								<StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+									<CheckBox></CheckBox>
+									<Label Text="Remember me" VerticalTextAlignment="Center"></Label>
+								</StackLayout>
+								<Label Text="Forgot Password?" TextColor="#03a9f4" HorizontalOptions="End" Grid.Row="0" Grid.Column="1">
+									<Label.GestureRecognizers>
+										<TapGestureRecognizer Command="{Binding GotoForgotPasswordCommand}"></TapGestureRecognizer>
+									</Label.GestureRecognizers>
+								</Label>
+							</Grid>
+
+							<StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+								<Button Text="Login" BackgroundColor="#03a9f4" Command="{Binding LoginCommand}"></Button>
+								<Button Text="Close" BackgroundColor="Red" Command="{Binding LoginCloseCommand}"></Button>
+							</StackLayout>
+						</StackLayout>
+					</StackLayout>
+				</Frame>
+			</ContentView>
+			<StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" IsVisible="{Binding Vendors, Converter={StaticResource IsEmptyListConverter}, ConverterParameter=true}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+				<Label Text="No Records" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="Large" TextColor="Black"></Label>
+			</StackLayout>
+			<ActivityIndicator IsVisible="{Binding IsBusy}" Color="#11A2CD" IsRunning="True" AbsoluteLayout.LayoutFlags="All"  AbsoluteLayout.LayoutBounds="0.5,0.5,.1,.1"></ActivityIndicator>
+		</AbsoluteLayout>
+	</ContentPage.Content>
 </ContentPage>

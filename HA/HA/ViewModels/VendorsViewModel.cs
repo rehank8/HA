@@ -116,7 +116,7 @@ namespace HA.ViewModels
 						{
 							Vendors = accntService.GetVendorslist();
 						});
-						await Application.Current.MainPage.DisplayAlert("Gps is not enabled", "Please turn on the Gps to accesss location", "Ok");
+						//await Application.Current.MainPage.DisplayAlert("Gps is not enabled", "Please turn on the Gps to accesss location", "Ok");
 					}
 					else
 					{

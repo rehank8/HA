@@ -44,10 +44,13 @@ namespace HA.ViewModels
 		public ICommand CloseRegCommand => new Command(CloseReg_clicked);
 		public ICommand LoginCloseCommand => new Command(Loginclose_clicked);
 		public ICommand LogoutCommand => new Command(Logout_clicked);
+		public ICommand GotoForgotPasswordCommand => new Command(GotoForgotPassword);
+		public ICommand ForgotPasswordCommand => new Command(ForgotPassword);
+
 		private bool _IsRegisterVisible;
 		private bool _IsLoginVisible, _isLogin, _isLogout, _isBusy;
 		public bool result = false;
-		private string _email, _password, _UserType, _currentLocation, _vendorsCount;
+		private string _email, _password, _UserType, _currentLocation, _vendorsCount, _pwdEmail;
 
 		public string VendorsCount
 		{
@@ -63,6 +66,11 @@ namespace HA.ViewModels
 		{
 			get { return _user; }
 			set { _user = value; NotifyPropertyChanged(); }
+		}
+		public string PwdEmail
+		{
+			get { return _pwdEmail; }
+			set { _pwdEmail = value; NotifyPropertyChanged(); }
 		}
 		public string UserType
 		{
@@ -453,13 +461,22 @@ namespace HA.ViewModels
 						Vendors = Users.GroupBy(x => x.CategoryName).Select(x => x.First()).ToList();
 						foreach (var item in Users)
 						{
-							item.VendorsCount = "(" + (Users.GroupBy(x => x.CategoryName).ToList().Count()) + ")";
+							item.VendorsCount = "(" + (Users.Where(x=>x.CategoryName==item.CategoryName).ToList().Count()) + ")";
 						}
 						//VendorsCount = "(" + Vendors.Count + ")";
 					}
 					else
 					{
-						Vendors = accntService.GetVendorslist();
+						List<UserIndex> Users = new List<UserIndex>();
+						await Task.Run(() =>
+						{
+							Users = accntService.GetVendorslist();
+						});
+						Vendors = Users.GroupBy(x => x.CategoryName).Select(x => x.First()).ToList();
+						foreach (var item in Vendors)
+						{
+							item.VendorsCount = "(" + (Users.Where(x => x.CategoryName == item.CategoryName).ToList().Count()) + ")";
+						}
 					}
 				}
 				else
@@ -545,6 +562,20 @@ namespace HA.ViewModels
 			}
 			return true;
 
+		}
+		async void GotoForgotPassword()
+		{
+			await Application.Current.MainPage.Navigation.PushAsync(new ForgotPasswordPage());
+		}
+		async void ForgotPassword(object obj)
+		{
+			var e = obj as string;
+			await Task.Run(() =>
+			{
+
+			});
+			await Application.Current.MainPage.DisplayAlert("Message", "Verify the link sent to your email id", "Ok");
+			PwdEmail = string.Empty;
 		}
 		protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
 		{

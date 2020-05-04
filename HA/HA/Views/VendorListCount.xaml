@@ -9,19 +9,19 @@
 	<ContentPage.Content>
 		<AbsoluteLayout>
 			<StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
-				<SearchBar Placeholder="Search by vendor" Text="{Binding VendorSearch}" PlaceholderColor="LightGray" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+				<SearchBar Placeholder="Search by Name" Text="{Binding VendorSearch}" PlaceholderColor="Gray" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
 					<SearchBar.Behaviors>
 						<behavior:EventToCommandBehavior EventName="TextChanged" Command="{Binding SearchVendorCommand}" CommandParameter="{Binding VendorSearch}"></behavior:EventToCommandBehavior>
 					</SearchBar.Behaviors>
 				</SearchBar>
-				<Label Margin="10" FontSize="Large">
+				<!--<Label Margin="10" FontSize="Large">
 					<Label.FormattedText>
 						<FormattedString>
 							<Span Text="{Binding CategoryName}"></Span>
 							<Span Text="{Binding VendorsCount}"></Span>
 						</FormattedString>
 					</Label.FormattedText>
-				</Label>
+				</Label>-->
 				<ListView x:Name="lst" ItemsSource="{Binding Vendors}" Margin="10" HasUnevenRows="True" SelectedItem="{Binding Vendor}" IsVisible="{Binding Vendors,Converter={StaticResource IsEmptyListConverter}}">
 					<ListView.Behaviors>
 						<behavior:EventToCommandBehavior EventName="ItemSelected" Command="{Binding BookNowCommand}" CommandParameter="{Binding Vendor}"></behavior:EventToCommandBehavior>
@@ -39,6 +39,14 @@
 									<Image Source="{Binding PhotoUrl}" HeightRequest="40" VerticalOptions="CenterAndExpand"></Image>
 									<StackLayout Grid.Column="1" HorizontalOptions="Start">
 										<Label Text="{Binding ListingName}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"></Label>
+										<Label HorizontalTextAlignment="Start" VerticalTextAlignment="Center">
+											<Label.FormattedText>
+												<FormattedString>
+													<Span Text="Services: " FontAttributes="Bold"></Span>
+													<Span Text="{Binding Services}"></Span>
+												</FormattedString>
+											</Label.FormattedText>
+										</Label>
 										<Label HorizontalTextAlignment="Start" VerticalTextAlignment="Center">
 											<Label.FormattedText>
 												<FormattedString>

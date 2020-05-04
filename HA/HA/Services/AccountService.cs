@@ -22,6 +22,7 @@ namespace HA.Services
 		private string booking = "https://dmnerdbooking.azurewebsites.net/api/homeapi/bookappoinment/";
 		private string getDateTimeUrl = "https://dmnerdbooking.azurewebsites.net/api/homeapi/getvendoravailabletimebydate/";
 		private string enduserappointments = "https://dmnerdbooking.azurewebsites.net/api/accountapi/enduserappointments/";
+		private string resetPasswordUrl = "";
 
 
 
@@ -134,7 +135,8 @@ namespace HA.Services
 			}
 			//client.DefaultRequestHeaders.Add("Authorization", "Bearer " + Setters.AuthenticationModel.Token);
 			var response = client.GetAsync(getvendorsurl + loc).Result;
-			if (response.StatusCode == HttpStatusCode.OK)
+			//var response = client.GetAsync(getvendorsdetail + loc).Result;
+			if (response.StatusCode == HttpStatusCode.OK)//
 			{
 				var result = response.Content.ReadAsStringAsync().Result;
 				List<UserIndex> vendors = JsonConvert.DeserializeObject<List<UserIndex>>(result);
@@ -143,7 +145,7 @@ namespace HA.Services
 			}
 			else if (response.StatusCode == HttpStatusCode.BadRequest)
 			{
-				throw new ApplicationException("Could not get MoodHistory for the user");
+				throw new ApplicationException("Could not get History for the user");
 			}
 			return null;
 		}
@@ -226,6 +228,30 @@ namespace HA.Services
 				throw new ApplicationException("Could not get the appointments");
 			}
 			return null;
+		}
+		public void ResetPassword(string Email)
+		{
+			try
+			{
+				HttpClient httpClient = new HttpClient();
+				HttpContent httpContent = new StringContent(JsonConvert.SerializeObject(Email));
+				httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+				var response = httpClient.PostAsync(resetPasswordUrl, httpContent).Result;
+				var result = response.Content.ReadAsStringAsync().Result;
+				if (response.StatusCode == System.Net.HttpStatusCode.OK)
+				{
+
+					//ResetPasswordModel model1 = JsonConvert.DeserializeObject<ResetPasswordModel>(result);
+				}
+				else
+				{
+					
+				}
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
 		}
 	}
 }

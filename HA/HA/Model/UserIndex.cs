@@ -43,6 +43,8 @@ namespace HA.Model
 		public double? Price { get; set; }
 		public string Languages { get; set; }
 
+		public string Services { get; set; }
+
 		public int NoOfComments { get; set; }
 	}
 }
